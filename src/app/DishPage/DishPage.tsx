@@ -1,16 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import APIClient from "../../api/APIClient"; // Импортируем APIClient
-
-interface Dish {
-    id: number;
-    name: string;
-    description: string;
-    photo: string;
-    price: number;
-    weight: number;
-    type: string;
-}
+import APIClient from "../../api/APIClient";
+import { Dish } from "../../api/Type";
 
 const DishPage: FC = () => {
     const { id } = useParams<{ id: string }>();

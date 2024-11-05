@@ -1,0 +1,42 @@
+.background-gif
+    position: fixed
+    width: 100%
+    height: 100%
+    z-index: 50
+
+.home-page
+    &__content
+        z-index: 100
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate(-50%, -50%) 
+        text-align: center
+        font-size: 36px
+
+        &__title
+            color: #000
+            -webkit-text-stroke: 1px #ffffff50
+
+        &__buttons
+            display: flex
+            flex-direction: row
+            justify-content: center 
+            margin-top: 20px
+
+            &__button
+                width: 150px
+                height: 40px
+                font-size: 16px
+                cursor: pointer
+                border: solid
+                border-weight: 2px
+                border-color: #B01117
+                border-radius: 5px
+                background-color: #fff
+                color: #000
+                transition: background-color 0.3s, color 0.3s 
+
+                &:hover
+                    background-color: #B01117
+                    color: white

@@ -6,6 +6,7 @@ import './index.sass'
 import DishPage from './app/DishPage/DishPage';
 import MainPage from '../src/app/MainPage/MainPage';
 import Layout from './components/Layout/Layout';
+import HomePage from './app/HomePage/HomePage';
 
 const router = createBrowserRouter([
   {
@@ -25,8 +26,12 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/dinners',
-    element: <h1>Страница заказа</h1>,
+    path: '/',
+    element: (
+      <Layout>
+        <HomePage />
+      </Layout>
+    ),
   },
 ]);
 
