@@ -1,7 +1,7 @@
 .main-page
     display: grid
     grid-template-areas: 'indent dishes search'
-    grid-template-columns: 25% 40% 40%
+    grid-template-columns: 25% 40% 35%
 
     &__left-indent
         grid-area: indent
@@ -9,6 +9,44 @@
     &__dishes-column
         grid-area: dishes
         color: #fff
+        display: grid
+        grid-template-columns: repeat(2, 1fr)
+        gap: 30px 
+        row-gap: 50px
     
-    &__bucket_column
+    &__basket-column
         grid-area: search
+        padding-inline-start: 50px
+        padding-inline-end: 150px
+
+        &__basket
+            display: flex
+            flex-direction: row
+            justify-content: space-between
+            align-items: center
+            height: 50px
+
+            &__img-container
+                position: relative
+
+            &__title
+                color: white
+                font-size: 36px
+
+            &__dish-in-draft
+                position: absolute
+                top: 0
+                right: 0
+                display: block
+                width: 20px
+                height: 20px
+                background-color: #fff
+                border: none
+                border-radius: 50%
+                text-align: center
+                font-weight: bold
+
+.title
+    margin: 50px 0 20px 40%
+    font-size: 36px
+    color: #B01117

@@ -59,21 +59,27 @@ class MainPage extends Component<{}, MainPageState> {
             return <div>Ошибка {error}</div>
         }
 
-        console.log(dishes);
-
         return (
-            <main className="main-page">
-                <h1 className="main-page__title">Главная страница</h1>
-                <div className="main-page__left-indent"></div>
-                <div className="main-page__dishes-column">
-                    {dishes.map((dish) => (
-                        <DishCard key={dish.id} dish={dish} /> 
-                    ))}
-                </div>
-                <div className="main-page__bucket-column">
-
-                </div>
-            </main>
+            <>
+                <h1 className="title">Меню ресторана</h1>
+                <main className="main-page">
+                    <div className="main-page__left-indent"></div>
+                    <div className="main-page__dishes-column">
+                        {dishes.map((dish) => (
+                            <DishCard key={dish.id} dish={dish} /> 
+                        ))}
+                    </div>
+                    <div className="main-page__basket-column">
+                        <span className="main-page__basket-column__basket">
+                            <p className="main-page__basket-column__basket__title">Ваша корзина</p>
+                            <div className="main-page__basket-column__basket__img-container">
+                                <img src="../../public/basket.png" width="60px" height="60px" className="main-page__basket-column__basket__img"/>
+                                <span className="main-page__basket-column__basket__dish-in-draft">{dishesInBucket}</span>
+                            </div>
+                        </span>
+                    </div>
+                </main>
+            </>
         )
     }
 }
