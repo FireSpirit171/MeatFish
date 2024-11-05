@@ -1,18 +1,19 @@
-import {FC} from "react";
+import { FC } from "react";
+import { Link } from "react-router-dom";
 
 const Header: FC = () => {
-    return(
+    return (
         <nav className="header">
-            <a href="#">
-                <img src="../../../public/logo.png" width="120" height="120" />
-            </a>
+            <Link to="/">
+                <img src="/logo.png" width="120" height="120" alt="Логотип" />
+            </Link>
             <div className="header__center">
                 <div className="header__title-container">
                     <h1 className="header__title-container__title"><strong>Meat'n'Fish</strong></h1>
                 </div>
             </div>
         </nav>
-    )
+    );
 }
 
 export default Header;

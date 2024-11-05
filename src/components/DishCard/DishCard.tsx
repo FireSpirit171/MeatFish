@@ -1,11 +1,18 @@
 import { FC } from "react";
 import { Dish } from "../../api/Type";
+import { useNavigate } from "react-router-dom";
 
 const DishCard: FC<{ dish: Dish }> = ({ dish }) => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/dishes/${dish.id}`); // Переход на страницу блюда с ID
+    };
+
     return (
-        <div className="dish-card">
+        <div className="dish-card" onClick={handleClick} style={{ cursor: "pointer" }}>
             <div>
-                <img src={dish.photo} className="dish-card__img js-scale-img"/>
+                <img src={dish.photo} className="dish-card__img js-scale-img" alt={dish.name} />
                 <h3 className="dish-card__title">{dish.name}</h3>
                 <span className="dish-card__info">
                     <p className="dish-card__info__price">{dish.price}р.</p>
