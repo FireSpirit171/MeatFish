@@ -4,11 +4,15 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.sass'
 
 import MainPage from '../src/app/MainPage/MainPage';
+import Layout from './components/Layout/Layout';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <MainPage />
+    element:( 
+    <Layout>
+      <MainPage />
+    </Layout>)
   },
   {
     path: '/dishes',

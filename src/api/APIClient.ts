@@ -1,7 +1,5 @@
 "use strict";
 
-import { Dish } from "./Type.ts";
-
 interface RegisterParams {
     username: string;
     password: string;
