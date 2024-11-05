@@ -41,8 +41,12 @@ const APIClient = {
         return Ajax.post({ url, body });
     },
 
-    async getDishes(){
-        const url = this.BASE_URL + "/dishes/";
+    async getDishes(postfix: string){
+        let url = this.BASE_URL + "/dishes/";
+        if (postfix) {
+            url += postfix;
+        }
+        console.log(url)
         return Ajax.get(url);
     }
 };
