@@ -1,6 +1,8 @@
-import React, {Component, ReactNode} from "react";
+import {Component, ReactNode} from "react";
 import APIClient from "../../api/APIClient";
 import { Dish } from "../../api/Type";
+
+import DishCard from "../../components/DishCard/DishCard";
 
 interface MainPageState {
     dishes: Dish[];
@@ -27,7 +29,6 @@ class MainPage extends Component<{}, MainPageState> {
         try{
             const response = await APIClient.getDishes();
             const data = await response.json();
-            console.log(data);
             this.setState({
                 dishes: data.dishes,
                 draftId: data.draft_dinner_id,
@@ -58,15 +59,21 @@ class MainPage extends Component<{}, MainPageState> {
             return <div>Ошибка {error}</div>
         }
 
+        console.log(dishes);
+
         return (
-            <div>
-                <h1>Главная страница</h1>
-                <ul>
-                {dishes.map((item) => (
-                    <li key={item.id}>{item.name}</li> // Отображение списка данных
-                ))}
-                </ul>
-            </div>
+            <main className="main-page">
+                <h1 className="main-page__title">Главная страница</h1>
+                <div className="main-page__left-indent"></div>
+                <div className="main-page__dishes-column">
+                    {dishes.map((dish) => (
+                        <DishCard key={dish.id} dish={dish} /> 
+                    ))}
+                </div>
+                <div className="main-page__bucket-column">
+
+                </div>
+            </main>
         )
     }
 }
