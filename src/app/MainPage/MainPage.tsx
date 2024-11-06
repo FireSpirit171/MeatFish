@@ -40,14 +40,14 @@ class MainPage extends Component<{}, MainPageState> {
             if (minPrice !== undefined && maxPrice !== undefined) {
                 url += `?min_price=${minPrice}&max_price=${maxPrice}`;
             }
-    
+
             const timeout = new Promise((_, reject) =>
                 setTimeout(() => reject(new Error("Таймаут запроса")), 2000)
             );
 
             const response = await Promise.race([APIClient.getDishes(url), timeout]);
             const data = await response.json();
-    
+
             this.setState({
                 dishes: data.dishes,
                 draftId: data.draft_dinner_id,
@@ -55,10 +55,16 @@ class MainPage extends Component<{}, MainPageState> {
                 loading: false,
             });
         } catch (error: any) {
+            const filteredMockDishes = mockDishes.dishes.filter(dish => {
+                const withinMinPrice = minPrice !== undefined ? dish.price >= minPrice : true;
+                const withinMaxPrice = maxPrice !== undefined ? dish.price <= maxPrice : true;
+                return withinMinPrice && withinMaxPrice;
+            });
+
             this.setState({
-                dishes: mockDishes.dishes,
+                dishes: filteredMockDishes,
                 draftId: null,
-                dishesInBucket: 0,
+                dishesInBucket: filteredMockDishes.length,
                 error: error.message || "Ошибка загрузки данных",
                 loading: false,
             });
