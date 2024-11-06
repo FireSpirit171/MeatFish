@@ -4,6 +4,8 @@ import { Dish } from "../../api/Type";
 
 import DishCard from "../../components/DishCard/DishCard";
 
+import { mockDishes } from '../../mockdata';
+
 interface MainPageState {
     dishes: Dish[];
     draftId: number | null;
@@ -38,9 +40,14 @@ class MainPage extends Component<{}, MainPageState> {
             if (minPrice !== undefined && maxPrice !== undefined) {
                 url += `?min_price=${minPrice}&max_price=${maxPrice}`;
             }
+    
+            const timeout = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error("Таймаут запроса")), 2000)
+            );
 
-            const response = await APIClient.getDishes(url);
+            const response = await Promise.race([APIClient.getDishes(url), timeout]);
             const data = await response.json();
+    
             this.setState({
                 dishes: data.dishes,
                 draftId: data.draft_dinner_id,
@@ -49,12 +56,16 @@ class MainPage extends Component<{}, MainPageState> {
             });
         } catch (error: any) {
             this.setState({
+                dishes: mockDishes.dishes,
+                draftId: null,
+                dishesInBucket: 0,
                 error: error.message || "Ошибка загрузки данных",
                 loading: false,
             });
             console.log('error: ', error);
         }
     }
+    
 
     componentDidMount(): void {
         this.getDishes();
@@ -94,11 +105,7 @@ class MainPage extends Component<{}, MainPageState> {
         const { dishes, draftId, dishesInBucket, loading, error, minRange, maxRange } = this.state;
 
         if (loading) {
-            return <div>Загрузка...</div>;
-        }
-
-        if (error) {
-            return <div>Ошибка {error}</div>;
+            return <div className="loading">Загрузка...</div>;
         }
 
         return (
