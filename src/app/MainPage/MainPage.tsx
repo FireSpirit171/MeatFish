@@ -30,8 +30,8 @@ class MainPage extends Component<{}, MainPageState> {
             maxRange: 5000,
         };
 
-        this.updatePriceRange = this.updatePriceRange.bind(this); // Привязка контекста
-        this.handleSearch = this.handleSearch.bind(this); // Привязка контекста
+        this.updatePriceRange = this.updatePriceRange.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
 
     async getDishes(minPrice?: number, maxPrice?: number) {
