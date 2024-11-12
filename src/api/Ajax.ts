@@ -1,10 +1,5 @@
 'use strict';
 
-interface PostParams {
-    url: string;
-    body: object;
-}
-
 interface RequestParams {
     url: string;
     body?: object;
@@ -18,14 +13,6 @@ class Ajax {
             method: 'GET',
             url: url,
         });
-    }
-
-    static post({ url, body }: PostParams): Promise<any> {
-        return this.#makeRequest({ method: 'POST', url, body });
-    }
-
-    static delete({ url, body }: PostParams): Promise<any> {
-        return this.#makeRequest({ method: 'DELETE', url, body });
     }
 
     static async #makeRequest({
@@ -52,7 +39,6 @@ class Ajax {
                 body: JSON.stringify(body),
             });
         }
-
         return await fetch(request);
     }
 }
