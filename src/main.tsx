@@ -3,10 +3,10 @@ import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom' 
 import './index.sass'
 
-import DishPage from './app/DishPage/DishPage';
-import MainPage from '../src/app/MainPage/MainPage';
+import DishPage from './pages/DishPage/DishPage';
+import MainPage from './pages/MenuPage/MainPage';
 import Layout from './components/Layout/Layout';
-import HomePage from './app/HomePage/HomePage';
+import HomePage from './pages/HomePage/HomePage';
 
 const router = createBrowserRouter([
   {
