@@ -22,7 +22,7 @@ const DishCard: FC<{ dish: Dish }> = ({ dish }) => {
                 <p className="dish-card__type">Категория: {dish.type}</p>
             </div>
             <div className="dish-card__button-container">
-                <button className="dish-card__button-container__button">Добавить в корзину</button>
+                <button className="dish-card__button-container__button" disabled>Добавить в корзину</button>
             </div>
         </div>
     );
