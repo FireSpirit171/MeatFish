@@ -1,4 +1,3 @@
-// mockData.ts
 export const mockDishes = {
     "dishes": [
         {
@@ -8,7 +7,7 @@ export const mockDishes = {
             "description": "Фирменные свиные рёбра в соусе на выбор. Подаются с печёным картофелем с розмарином или красной фасолью в соусе Тако (на выбор)",
             "price": 720,
             "weight": 350,
-            "photo": "http://127.0.0.1:9000/meatfish/default.jpg" 
+            "photo": "../public/default.jpg" 
         },
         {
             "id": 2,
@@ -17,7 +16,7 @@ export const mockDishes = {
             "description": "Сочетание разных вкусов на одной порции: соус BBQ с фисташкой и апельсиновой цедрой, соус медовый-терияки с кунжутом и зеленым луком, соус кисло-сладкий. На гарнир печеный картофель с розмарином",
             "price": 1090,
             "weight": 720,
-            "photo": "http://127.0.0.1:9000/meatfish/default.jpg" 
+            "photo": "../public/default.jpg" 
         },
         {
             "id": 3,
@@ -26,7 +25,7 @@ export const mockDishes = {
             "description": "Говяжьи рёбра в соусе на выбор. Подаются с печеным картофелем с розмарином или красной фасолью в соусе Тако (на выбор)",
             "price": 1790,
             "weight": 240,
-            "photo": "http://127.0.0.1:9000/meatfish/default.jpg" 
+            "photo": "../public/default.jpg" 
         },
         {
             "id": 4,
@@ -35,7 +34,7 @@ export const mockDishes = {
             "description": "Стейк фланк обжаренный на гриле Прожарка стейка well done/medium well/medium/medium rare/rare. Подается на доске, посыпается крупной морской солью со сливочно перечным соусом.",
             "price": 1250,
             "weight": 230,
-            "photo": "http://127.0.0.1:9000/meatfish/default.jpg" 
+            "photo": "../public/default.jpg" 
         }
     ]
 };

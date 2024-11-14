@@ -64,7 +64,7 @@ class MainPage extends Component<{}, MainPageState> {
             this.setState({
                 dishes: filteredMockDishes,
                 draftId: null,
-                dishesInBucket: filteredMockDishes.length,
+                dishesInBucket: 0,
                 error: error.message || "Ошибка загрузки данных",
                 loading: false,
             });
