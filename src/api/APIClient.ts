@@ -10,13 +10,11 @@ const APIClient = {
         if (postfix !== '') {
             url += postfix;
         }
-        console.log(url);
         return Ajax.get(url);
     },
 
     async getDish(id: string) {
         const url = this.BASE_URL + `dishes/${id}/`;
-        console.log(url);
         return Ajax.get(url);
     }
 };
