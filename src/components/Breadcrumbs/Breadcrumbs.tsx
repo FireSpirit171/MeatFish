@@ -12,23 +12,12 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({ dishName }) => {
     return (
         <nav className="breadcrumbs">
             <Link to="/dishes" className="breadcrumbs__link">Меню</Link>
-            {pathnames.map((value, index) => {
-                const to = `/${pathnames.slice(0, index + 1).join("/")}`;
-                const isLast = index === pathnames.length - 1;
-
-                return (
-                    <span key={to} className="breadcrumbs__item">
-                        {" / "}
-                        {isLast && dishName ? (
-                            <span className="breadcrumbs__current">{dishName}</span>
-                        ) : isLast ? (
-                            <span className="breadcrumbs__current">{value}</span>
-                        ) : (
-                            <Link to={to} className="breadcrumbs__link">{value}</Link>
-                        )}
-                    </span>
-                );
-            })}
+            {dishName && (
+                <span className="breadcrumbs__item">
+                    <span className="breadcrumbs__separator"> / </span>
+                    <span className="breadcrumbs__current">{dishName}</span>
+                </span>
+            )}
         </nav>
     );
 };

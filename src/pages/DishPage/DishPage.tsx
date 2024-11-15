@@ -8,7 +8,7 @@ import { mockDishes } from '../../mockdata';
 const DishPage: FC = () => {
     const { id } = useParams<{ id: string }>();
     const [dish, setDish] = useState<Dish | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [dishLoading, setDishLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -23,37 +23,39 @@ const DishPage: FC = () => {
                 setDish(data);
             } catch (error: any) {
                 const mockDish = mockDishes.dishes.find(dish => dish.id.toString() === id);
-                console.log(mockDish);
                 if (mockDish) {
                     setDish(mockDish);
                 }
                 setError(error.message || "Ошибка загрузки блюда");
             } finally {
-                setLoading(false);
+                setDishLoading(false);
             }
         };
 
         fetchDish();
     }, [id]);
-    
-    if (loading) return <div className="loading">Загрузка...</div>;
 
     return (
         <>
-            <Breadcrumbs dishName={dish?.name} />
-            <div className="dish-container">
-                <div className="dish-container__img-container">
-                    <img src={dish?.photo} className="dish-container__img-container__img js-scale-img" />
+            <Breadcrumbs dishName={!dishLoading && dish ? dish.name : undefined} />
+            {dishLoading ? (
+                <div className="loading">Загрузка блюда...</div>
+            ) : (
+                <div className="dish-container">
+                    <div className="dish-container__img-container">
+                        <img src={dish?.photo} className="dish-container__img-container__img js-scale-img" alt={dish?.name} />
+                    </div>
+                    <div className="dish-container__info-container">
+                        <h1 className="dish-container__info-container__title">{dish?.name}</h1>
+                        <p className="dish-container__info-container__description">{dish?.description}</p>
+                        <span className="dish-container__info-container__price-container">
+                            <p className="dish-container__info-container__price-container__price">{dish?.price}р. /</p>
+                            <p className="dish-container__info-container__price-container__title"> {dish?.weight} г.</p>
+                        </span>
+                    </div>
                 </div>
-                <div className="dish-container__info-container">
-                    <h1 className="dish-container__info-container__title">{dish?.name}</h1>
-                    <p className="dish-container__info-container__description">{dish?.description}</p>
-                    <span className="dish-container__info-container__price-container">
-                        <p className="dish-container__info-container__price-container__price">{dish?.price}р. /</p>
-                        <p className="dish-container__info-container__price-container__title"> {dish?.weight} г.</p>
-                    </span>
-                </div>
-            </div>
+            )}
+            {error && <div className="error">{error}</div>}
         </>
     );
 };
