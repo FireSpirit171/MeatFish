@@ -7,6 +7,10 @@
     flex-direction: row
     align-items: center
 
+    img
+        width: 120px
+        height: 120px
+
     &__center
         display: flex
         justify-content: center
@@ -39,4 +43,22 @@
             border-color: #000
             background-color: #000
 
-    
+@media screen and (max-width: 600px) 
+    .header
+        height: 90px 
+        padding-inline-start: 20px
+        padding-inline-end: 20px
+
+        img
+            width: 80px
+            height: 80px    
+
+        &__title-container 
+            display: none
+
+        &__button-container
+            width: 200px
+            height: 30px
+
+        &__menu-button
+            font-size: 16px 

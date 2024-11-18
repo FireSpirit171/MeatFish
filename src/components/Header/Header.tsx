@@ -5,7 +5,7 @@ const Header: FC = () => {
     return (
         <header className="header">
             <Link to="/">
-                <img src="/logo.png" width="120" height="120" alt="Логотип" />
+                <img src="/logo.png" alt="Логотип" />
             </Link>
             <div className="header__center">
                 <div className="header__title-container">

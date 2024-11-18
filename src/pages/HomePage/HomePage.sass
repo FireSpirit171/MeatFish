@@ -3,6 +3,8 @@
     width: 100%
     height: 100%
     z-index: 50
+    object-fit: cover
+    object-position: center
 
 .home-page
     &__content
@@ -40,3 +42,20 @@
                 &:hover
                     background-color: #B01117
                     color: white
+
+@media screen and (max-width: 600px) 
+    .background-gif 
+        background-size: cover
+        background-position: center
+
+    .home-page 
+        &__content 
+            font-size: 24px
+
+            &__buttons 
+                justify-content: center
+            
+            &__buttons__button 
+                width: 120px
+                height: 35px
+                font-size: 14px
