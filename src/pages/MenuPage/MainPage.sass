@@ -31,6 +31,10 @@
             align-items: center
             height: 50px
 
+            &__img
+                width: 60px
+                height: 60px
+
             &__img-container
                 position: relative
 
@@ -53,10 +57,19 @@
     
         &__price
             &__title
-                margin-top: 50px
                 color: #fff
-                font-size: 36px
+                font-size: 30px
                 font-weight: 100
+                display: flex
+                justify-content: left
+    
+        &__price-container
+            display: flex
+            flex-direction: row
+            align-items: center
+            justify-content: space-between
+            margin: 50px 0 30px 0
+            gap: 70px
     
 .title
     margin: 50px 0 20px 40%
@@ -129,8 +142,83 @@
     width: 30px
 
 #price-range
-    margin: 10px auto 20px 0
-    font-size: 16px
+    font-size: 22px
     color: #B01117
+
+@media (max-width: 600px)
+    .main-page
+        display: flex
+        flex-direction: column
+        align-items: center
+
+    .main-page__left-indent
+        display: none
+
+    .main-page__basket-column
+        order: 1
+        width: 100%
+        max-width: 500px
+        display: flex
+        flex-direction: column
+        align-items: center
+        margin-bottom: 20px
+        padding: 0 0 0 0 !important
+
+        &__price-container
+            margin: 10px 0px 20px 0px !important
+            display: flex
+            justify-content: space-evenly
+            padding: 0 10px 0 10px
+
+        &__basket
+            margin: 10px 0 0 0
+            display: flex
+            flex-direction: row
+            justify-content: center
+            gap: 20px
+            width: 100%
+
+            &__img
+                width: 40px
+                height: 40px
+
+        &__basket__title
+            font-size: 24px
+            margin-top: 0 !important
+        
+        &__price__title
+            font-size: 20px
+            margin-top: 0 !important
+
+    .rangeslider
+        width: 100%
+        margin-bottom: 20px
+
+        p
+            margin: 5px 0 10px 0 !important
+
+    .slider-container
+        width: 90%
+        justify-content: space-between
+
+    .input-ranges[type='range']
+        width: 80%
+
+    .main-page__dishes-column
+        order: 2
+        width: 100%
+        max-width: 500px
+        display: flex
+        flex-direction: column
+        gap: 30px
+    
+    .title
+        // margin: 0 0 0 0 !important
+        // display: flex
+        // justify-content: center
+        display: none
+    
+    #price-range
+        font-size: 18px
 
 

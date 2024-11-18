@@ -95,14 +95,16 @@ const MainPage: React.FC = () => {
                     <span className="main-page__basket-column__basket">
                         <p className="main-page__basket-column__basket__title">Ваша корзина</p>
                         <div className="main-page__basket-column__basket__img-container">
-                            <img src="/basket.png" width="60px" height="60px" className="main-page__basket-column__basket__img" />
+                            <img src="/basket.png" className="main-page__basket-column__basket__img" />
                             <span className="main-page__basket-column__basket__dish-in-draft">{dishesInBucket}</span>
                         </div>
                     </span>
 
-                    <h1 className="main-page__basket-column__price__title">Поиск по цене</h1>
                     <form className="rangeslider" onSubmit={handleSearch}>
-                        <p id="price-range">{minRange}р. - {maxRange}р.</p>
+                        <div className="main-page__basket-column__price-container">
+                            <h1 className="main-page__basket-column__price__title">Поиск по цене</h1>
+                            <p id="price-range">{minRange}р. - {maxRange}р.</p>
+                        </div>
                         <div className="slider-container">
                             <input 
                                 className="input-ranges" 
