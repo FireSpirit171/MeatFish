@@ -10,8 +10,6 @@ import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage/HomePage';
 import { useEffect } from 'react';
 
-import { invoke } from "@tauri-apps/api";
-
 const router = createBrowserRouter([
   {
     path: '/dishes/',
@@ -41,15 +39,19 @@ const router = createBrowserRouter([
 
 function App() {
   useEffect(() => {
-    invoke('create')
-      .then((response: string) => console.log(response))
-      .catch((error: any) => console.error('Error:', error));
+    if (window.TAURI) {
+      const { invoke } = window.TAURI.tauri;
 
-    return () => {
-      invoke('close')
+      invoke('create')
         .then((response: string) => console.log(response))
         .catch((error: any) => console.error('Error:', error));
-    };
+
+      return () => {
+        invoke('close')
+          .then((response: string) => console.log(response))
+          .catch((error: any) => console.error('Error:', error));
+      };
+    }
   }, []);
 
   return (
