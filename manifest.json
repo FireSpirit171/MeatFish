@@ -1,0 +1,35 @@
+{
+    "name": "MeatFish",
+    "short_name": "MeatFish",
+    "start_url": "/MeatFish/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#00001a",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/MeatFish/logo.png",
+            "type": "image/png",
+            "sizes": "1024x1024",
+            "purpose": "any"
+        },
+        {
+            "src": "/MeatFish/logo.png",
+            "type": "image/png",
+            "sizes": "1024x1024",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/MeatFish/web-app-manifest-192x192.png",
+            "type": "image/png",
+            "sizes": "192x192",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/MeatFish/web-app-manifest-512x512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "maskable"
+        }
+    ]
+}
