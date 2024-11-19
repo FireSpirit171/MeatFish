@@ -12,10 +12,10 @@ const MainPage: React.FC = () => {
     const { minRange, maxRange } = useSelector((state: RootState) => state.filter);
 
     const [dishes, setDishes] = useState<Dish[]>([]);
-    const [draftId, setDraftId] = useState<number | null>(null);
+    const [_, setDraftId] = useState<number | null>(null);
     const [dishesInBucket, setDishesInBucket] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [__, setError] = useState<string | null>(null);
 
     const getDishes = async (minPrice?: number, maxPrice?: number) => {
         try {

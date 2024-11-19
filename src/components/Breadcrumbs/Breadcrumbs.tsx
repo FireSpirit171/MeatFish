@@ -8,6 +8,7 @@ interface BreadcrumbsProps {
 const Breadcrumbs: FC<BreadcrumbsProps> = ({ dishName }) => {
     const location = useLocation();
     const pathnames = location.pathname.split("/").filter((x) => x && x !== "dishes");
+    console.log(pathnames);
 
     return (
         <nav className="breadcrumbs">

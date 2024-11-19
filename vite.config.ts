@@ -13,5 +13,6 @@ export default defineConfig({
       },
   },
   }, 
+  base: "/MeatFish",
   plugins: [react()],
 })
