@@ -42,7 +42,7 @@ const Header: FC = () => {
                 <Link href="/dishes" className={`header__nav-item ${router.pathname === "/dishes" ? "active" : ""}`}>
                     Меню
                 </Link>
-                <Link href="/dinners" className={`header__nav-item ${router.pathname === "/dishes" ? "active" : ""}`}>
+                <Link href="/dinners" className={`header__nav-item ${router.pathname === "/dinners" ? "active" : ""}`}>
                     Заказы
                 </Link>
                 {isLoggedIn ? (
