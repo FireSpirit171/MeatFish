@@ -21,9 +21,9 @@ const DishCard: FC<{ dish: Dish }> = ({ dish }) => {
                 </span>
                 <p className="dish-card__type">Категория: {dish.type}</p>
             </div>
-            <div className="dish-card__button-container">
+            {/* <div className="dish-card__button-container">
                 <button className="dish-card__button-container__button" disabled>Добавить в корзину</button>
-            </div>
+            </div> */}
         </div>
     );
 };

@@ -80,13 +80,13 @@ const MainPage: React.FC = () => {
                   ))}
               </div>
               <div className="main-page__basket-column">
-                  <span className="main-page__basket-column__basket">
+                  {/* <span className="main-page__basket-column__basket">
                       <p className="main-page__basket-column__basket__title">Ваша корзина</p>
                       <div className="main-page__basket-column__basket__img-container">
                           <img src="/basket.png" className="main-page__basket-column__basket__img" />
                           <span className="main-page__basket-column__basket__dish-in-draft">{dishesInBucket}</span>
                       </div>
-                  </span>
+                  </span> */}
 
                   <div className="rangeslider">
                       <div className="main-page__basket-column__price-container">
