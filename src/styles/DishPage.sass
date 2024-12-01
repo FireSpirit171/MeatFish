@@ -33,3 +33,23 @@
             flex-direction: row
             color: #B01117
             font-size: 24px
+
+@media screen and ( max-width: 600px )
+    .dish-container
+        margin: 0 5% !important
+        width: 90%
+        flex-direction: column
+
+        &__img-container
+            width: 100%
+
+            &__img
+                height: 300px
+        
+        &__info-container
+            width: 100%
+            gap: 10px
+
+            &__description
+                font-size: 20px
+                text-align: justify
