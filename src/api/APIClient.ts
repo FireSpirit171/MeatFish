@@ -57,6 +57,11 @@ const APIClient = {
             password: password
         }
         return Ajax.post({url, body})
+    },
+
+    async getDinners(){
+        const url = this.BASE_URL + 'dinners/';
+        return Ajax.get(url);
     }
 };
 

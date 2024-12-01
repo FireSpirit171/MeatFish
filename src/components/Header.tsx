@@ -39,11 +39,11 @@ const Header: FC = () => {
                 </div>
             </div>
             <nav className="header__nav">
-                <Link href="/" className={`header__nav-item ${router.pathname === "/" ? "active" : ""}`}>
-                    Главная
-                </Link>
                 <Link href="/dishes" className={`header__nav-item ${router.pathname === "/dishes" ? "active" : ""}`}>
                     Меню
+                </Link>
+                <Link href="/dinners" className={`header__nav-item ${router.pathname === "/dishes" ? "active" : ""}`}>
+                    Заказы
                 </Link>
                 {isLoggedIn ? (
                     <>
