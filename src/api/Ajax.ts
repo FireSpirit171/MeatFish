@@ -1,11 +1,17 @@
 'use strict';
 
+import { getCookie } from "./Utils";
+
 interface RequestParams {
     url: string;
     body?: object;
     method: string;
 }
 
+interface PostParams {
+    url: string;
+    body: object;
+}
 
 class Ajax {
     static get(url: string): Promise<any> {
@@ -13,6 +19,10 @@ class Ajax {
             method: 'GET',
             url: url,
         });
+    }
+
+    static post({ url, body }: PostParams) {
+        return this.#makeRequest({ method: 'POST', url, body });
     }
 
     static async #makeRequest({
@@ -30,10 +40,15 @@ class Ajax {
                 credentials: 'include',
             });
         } else {
+            const csrfToken = getCookie('csrftoken');
+            if (!csrfToken) {
+                throw new Error('CSRF token is missing');
+            }
             request = new Request(url, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
+                    'XCSRF-Token': csrfToken
                 },
                 credentials: 'include',
                 body: JSON.stringify(body),

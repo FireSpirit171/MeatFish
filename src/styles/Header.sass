@@ -7,7 +7,7 @@
     flex-direction: row
     align-items: center
 
-    img
+    &__img1
         width: 120px
         height: 120px
 
@@ -27,25 +27,40 @@
         gap: 20px
         align-items: center
 
-        .header__nav-item
-            position: relative
-            color: #000
-            font-size: 24px
+        a
             text-decoration: none
-            font-weight: 600
 
-            &:hover
-                color: #fff
+    &__nav-item
+        position: relative
+        color: #000
+        font-size: 24px
+        text-decoration: none
+        font-weight: 600
 
-            &.active::after
-                content: ""
-                position: absolute
-                bottom: -5px
-                left: 50%
-                transform: translateX(-50%)
-                width: 50%
-                height: 2px
-                background-color: #000
+        &:hover
+            color: #fff
+
+        &.active::after
+            content: ""
+            position: absolute
+            bottom: -5px
+            left: 50%
+            transform: translateX(-50%)
+            width: 50%
+            height: 2px
+            background-color: #000
+    
+    &__user-icon
+        width: 60px
+        height: 60px
+        border-radius: 50%
+        margin-left: 20px
+        cursor: pointer
+        transition: transform 0.2s
+
+        &:hover
+            transform: scale(1.1)
+
 
 @media screen and (max-width: 600px)
     .header
