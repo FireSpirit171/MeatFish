@@ -111,6 +111,15 @@ const APIClient = {
         const url = this.BASE_URL + `dinners/${dinnerId}/`;
         const body = {}
         return Ajax.delete({url, body});
+    },
+
+    async updateProfile(email?: string, password?: string) {
+        const url = this.BASE_URL + 'users/profile/';
+        const body: any = {};
+        if (email) body.email = email;
+        if (password) body.password = password;
+
+        return Ajax.put({url, body})
     }
 };
 

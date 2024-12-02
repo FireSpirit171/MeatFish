@@ -46,13 +46,13 @@ const Header: FC = () => {
                     Заказы
                 </Link>
                 {isLoggedIn ? (
-                    <>
+                    <Link href="/profile">
                         <img
                             src="/default_user.png"
                             alt="User"
                             className="header__user-icon"
                         />
-                    </>
+                    </Link>
                 ) : (
                     <Link href="/auth" className={`header__nav-item ${router.pathname === "/auth" ? "active" : ""}`}>
                         Войти
