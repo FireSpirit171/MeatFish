@@ -1,0 +1,89 @@
+.horizontal-dish-card
+  display: flex
+  align-items: center
+  border: 1px solid #d70000
+  border-radius: 10px
+  margin: 10px 0
+  background-color: #1e1e1e
+  color: white
+  width: 70%
+
+  .card-row
+    display: flex
+    width: 100%
+
+    .image-container
+      flex: 0 0 150px
+      img.dish-image
+        width: 150px
+        height: 118px
+        border-radius: 8px 0 0 8px
+        object-fit: cover
+
+    .content
+      flex: 1
+      display: flex
+      flex-direction: column
+      justify-content: space-between
+      padding: 10px
+
+      .dish-name-link
+        text-decoration: none
+
+      .dish-name
+        font-size: 1.4rem
+        margin: 0
+        color: white
+
+      .bottom-row
+        display: flex
+        justify-content: space-between
+        align-items: center
+        margin-top: 10px
+
+        .dish-price
+          font-size: 1.2rem
+          font-weight: bold
+          color: #d70000
+
+        .quantity-control
+          display: flex
+          align-items: center
+          gap: 10px
+
+          .dish-count
+            font-size: 1rem
+
+          .controls
+            display: flex
+            align-items: center
+            gap: 5px
+
+            .control-btn
+              display: flex
+              justify-content: center
+              align-items: center
+              width: 24px
+              height: 24px
+              background-color: #d70000
+              color: white
+              font-weight: bold
+              border-radius: 50%
+              cursor: pointer
+              &:hover
+                background-color: #a50000
+
+            .divider
+              width: 1px
+              height: 20px
+              background-color: #d70000
+
+            .disabled
+              background-color: #7f7f7f
+              cursor: not-allowed
+              opacity: 0.5 
+
+.trash
+  width: 25px
+  height: 25px
+  cursor: pointer

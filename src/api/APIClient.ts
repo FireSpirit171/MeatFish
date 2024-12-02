@@ -62,6 +62,55 @@ const APIClient = {
     async getDinners(){
         const url = this.BASE_URL + 'dinners/';
         return Ajax.get(url);
+    },
+
+    async getDinnerById(id: number){
+        const url = this.BASE_URL + `dinners/${id}/`
+        return Ajax.get(url)
+    },
+    
+    async addDishToDraft(id: number){
+        const url = this.BASE_URL + `/dishes/${id}/draft/`;
+        const body = {}
+        return Ajax.post({url, body});
+    },
+
+    async changeAddFields(id:number, tableNumber?: number) {
+        const url = this.BASE_URL + `dinners/${id}/edit`;
+        const body = {
+            table_number: tableNumber
+        }
+
+        return Ajax.put({url, body})
+    },
+
+    async changeDishFields(dinnerId: number, dishId: number, guest?: string, count?: number){
+        const url = this.BASE_URL + `dinners/${dinnerId}/dishes/${dishId}/`;
+        const body: any = {};
+        if (guest) body.guest = guest;
+        if (count) body.count = count;
+
+        return Ajax.put({url, body})
+    },
+
+    async deleteDishFromDraft(dinnerId: number, dishId: number) {
+        const url = this.BASE_URL + `dinners/${dinnerId}/dishes/${dishId}/`;
+        const body = {}
+        return Ajax.delete({url, body})
+    },
+
+    async formDinner(dinnerId: number) {
+        const url = this.BASE_URL + `dinners/${dinnerId}/form/`;
+        const body = {
+            status: 'f'
+        }
+        return Ajax.put({url, body});
+    },
+
+    async deleteDinner(dinnerId: number) {
+        const url = this.BASE_URL + `dinners/${dinnerId}/`;
+        const body = {}
+        return Ajax.delete({url, body});
     }
 };
 

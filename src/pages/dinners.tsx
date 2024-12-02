@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ApiClient from '../api/APIClient';
 import { Dinner } from '@/api/Types';
+import { useRouter } from 'next/router';
 
 const DinnersPage = () => {
   const [dinners, setDinners] = useState<Dinner[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchDinners = async () => {
@@ -35,6 +37,10 @@ const DinnersPage = () => {
     }
   };
 
+  const handleRowClick = (id: number) => {
+    router.push(`/dinners/${id}`);
+  };
+
   return (
     <div className="dinners-page">
       <h1>Ваши заказы</h1>
@@ -50,7 +56,10 @@ const DinnersPage = () => {
         </thead>
         <tbody>
           {dinners.map((dinner: Dinner) => (
-            <tr key={dinner.id}>
+            <tr
+              key={dinner.id}
+              onClick={() => handleRowClick(dinner.id)}
+            >
               <td>{dinner.id}</td>
               <td>{getStatusText(dinner.status)}</td>
               <td>{formatDate(dinner.created_at)}</td>

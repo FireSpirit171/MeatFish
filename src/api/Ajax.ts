@@ -25,6 +25,14 @@ class Ajax {
         return this.#makeRequest({ method: 'POST', url, body });
     }
 
+    static put({ url, body }: PostParams) {
+        return this.#makeRequest({ method: 'PUT', url, body });
+    }
+
+    static delete({ url, body }: PostParams) {
+        return this.#makeRequest({ method: 'DELETE', url, body });
+    }
+
     static async #makeRequest({
         method,
         url,
@@ -42,13 +50,14 @@ class Ajax {
         } else {
             const csrfToken = getCookie('csrftoken');
             if (!csrfToken) {
+                console.log('here')
                 throw new Error('CSRF token is missing');
             }
             request = new Request(url, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'XCSRF-Token': csrfToken
+                    'X-CSRFToken': csrfToken
                 },
                 credentials: 'include',
                 body: JSON.stringify(body),
