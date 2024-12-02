@@ -14,3 +14,8 @@ export function getCookie(name: string) {
     }
     return cookieValue;
 }
+
+// Функция для удаления куки
+export function deleteCookie(name: string) {
+    document.cookie = `${name}=; Max-Age=0; path=/;`;
+}

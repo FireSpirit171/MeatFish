@@ -50,6 +50,12 @@ const APIClient = {
         return Ajax.post({url, body})
     },
 
+    async logout() {
+        const url = this.BASE_URL + 'logout/';
+        const body = {};
+        return Ajax.post({url, body})
+    },
+
     async auth({email, password}:LoginParams) {
         const url = this.BASE_URL + '/users/auth/'
         const body = {

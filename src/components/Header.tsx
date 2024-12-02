@@ -3,9 +3,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { login } from "../store/userSlice";
+import { login, logout } from "../store/userSlice";
+import { resetCart } from "../store/cartSlice";
 import ApiClient from "@/api/APIClient";
-import { getCookie } from "../api/Utils";
+import { getCookie, deleteCookie } from "../api/Utils";
 
 const Header: FC = () => {
     const router = useRouter();
@@ -13,18 +14,34 @@ const Header: FC = () => {
     const { isLoggedIn, userName } = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
-        const sessionId = getCookie('session_id');
+        const sessionId = getCookie("session_id");
         if (sessionId) {
             const checkSession = async () => {
                 const response = await ApiClient.getSession();
                 const data = await response.json();
-                if (data.status === 'ok' && data.username) {
+                if (data.status === "ok" && data.username) {
                     dispatch(login(data.username));
                 }
             };
             checkSession();
         }
     }, [dispatch]);
+
+    const handleLogout = async () => {
+        try {
+            const response = await ApiClient.logout();
+            if (response.ok) {
+                deleteCookie("session_id");
+                dispatch(resetCart());
+                dispatch(logout());
+                router.push("/");
+            } else {
+                console.error("Ошибка при логауте");
+            }
+        } catch (error) {
+            console.error("Ошибка при логауте:", error);
+        }
+    };
 
     return (
         <header className="header">
@@ -46,16 +63,24 @@ const Header: FC = () => {
                     Заказы
                 </Link>
                 {isLoggedIn ? (
-                    <div className="header__user">
-                        <Link href="/profile">
-                            <img
-                                src="/default_user.png"
-                                alt="User"
-                                className="header__user-icon"
-                            />
-                        </Link>
-                        <span className="header__user-email">{userName}</span>
-                    </div>
+                    <>
+                        <div className="header__user">
+                            <Link href="/profile">
+                                <img
+                                    src="/default_user.png"
+                                    alt="User"
+                                    className="header__user-icon"
+                                />
+                            </Link>
+                            <span className="header__user-email">{userName}</span>
+                        </div>
+                        <img
+                            src="/exit.svg"
+                            alt="Logout"
+                            className="header__logout-icon"
+                            onClick={handleLogout}
+                        />
+                    </>
                 ) : (
                     <Link href="/auth" className={`header__nav-item ${router.pathname === "/auth" ? "active" : ""}`}>
                         Войти

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import APIClient from "../api/APIClient";
 import { Dish } from "../api/Types";
 import DishCard from "../components/DishCard";
@@ -9,9 +9,17 @@ import { setPriceRange } from "../store/filterSlice";
 import { setDraftDinner, setTotalDishCount } from "../store/cartSlice";
 import { useRouter } from "next/router";
 
+const debounce = (func: Function, delay: number) => {
+  let timer: NodeJS.Timeout;
+  return (...args: any[]) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => func(...args), delay);
+  };
+};
+
 const MainPage: React.FC = () => {
   const dispatch = useDispatch();
-  const router = useRouter();  // добавляем useRouter
+  const router = useRouter();
   const { minRange, maxRange } = useSelector((state: RootState) => state.filter);
   const { totalDishCount, draftDinnerId } = useSelector((state: RootState) => state.cart);
 
@@ -52,9 +60,16 @@ const MainPage: React.FC = () => {
     }
   };
 
+  const debouncedGetDishes = useCallback(
+    debounce((minPrice: number, maxPrice: number) => {
+      getDishes(minPrice, maxPrice);
+    }, 500),
+    []
+  );
+
   useEffect(() => {
-    getDishes(minRange, maxRange);
-  }, [minRange, maxRange]);
+    debouncedGetDishes(minRange, maxRange);
+  }, [minRange, maxRange, debouncedGetDishes]);
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -89,16 +104,15 @@ const MainPage: React.FC = () => {
           <span className="main-page__basket-column__basket">
             <p className="main-page__basket-column__basket__title">Ваша корзина</p>
             <div
-            className="main-page__basket-column__basket__img-container"
-            onClick={totalDishCount > 0 ? handleGoToBasket : undefined}
-            style={{ cursor: totalDishCount > 0 ? 'pointer' : 'not-allowed' }}
+              className="main-page__basket-column__basket__img-container"
+              onClick={totalDishCount > 0 ? handleGoToBasket : undefined}
+              style={{ cursor: totalDishCount > 0 ? 'pointer' : 'not-allowed' }}
             >
-                <img src="/basket.png" className="main-page__basket-column__basket__img" />
-                <span className="main-page__basket-column__basket__dish-in-draft">
-                    {totalDishCount}
-                </span>
+              <img src="/basket.png" className="main-page__basket-column__basket__img" />
+              <span className="main-page__basket-column__basket__dish-in-draft">
+                {totalDishCount}
+              </span>
             </div>
-
           </span>
           <div className="rangeslider">
             <div className="main-page__basket-column__price-container">
