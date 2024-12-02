@@ -38,7 +38,7 @@ const MainPage: React.FC = () => {
         setTimeout(() => reject(new Error("Таймаут запроса")), 2000)
       );
 
-      const response = await Promise.race([APIClient.getDishes(url), timeout]);
+      const response: any = await Promise.race([APIClient.getDishes(url), timeout]);
       const data = await response.json();
 
       setDishes(data.dishes);

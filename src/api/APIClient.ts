@@ -1,6 +1,6 @@
 "use strict";
 
-import Ajax from "./Ajax";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { getCookie } from "./Utils";
 
 interface LoginParams {
@@ -8,126 +8,149 @@ interface LoginParams {
     password: string;
 }
 
-const APIClient = {
-    BASE_URL: `http://localhost:3000/api/`,
+interface APIResponse<T = any> {
+    json: () => Promise<T>;
+    ok: boolean;
+    status: number;
+    statusText: string;
+}
 
-    async getCsrfToken() {
+class APIClient {
+    private static instance: AxiosInstance;
+
+    private static getInstance(): AxiosInstance {
+        if (!this.instance) {
+            this.instance = axios.create({
+                baseURL: "http://localhost:3000/api/",
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            this.instance.interceptors.request.use(
+                (config) => {
+                    if (["post", "put", "delete"].includes(config.method || "")) {
+                        const csrfToken = getCookie("csrftoken");
+                        if (!csrfToken) {
+                            throw new Error("CSRF token is missing");
+                        }
+                        config.headers["X-CSRFToken"] = csrfToken;
+                    }
+                    return config;
+                },
+                (error) => Promise.reject(error)
+            );
+
+            this.instance.interceptors.response.use(
+                (response) => response,
+                (error) => {
+                    console.error("[API Error]:", error.response?.data || error.message);
+                    return Promise.reject(error);
+                }
+            );
+        }
+        return this.instance;
+    }
+
+    private static handleResponse<T>(response: AxiosResponse<T>): APIResponse<T> {
+        return {
+            json: async () => response.data,
+            ok: response.status >= 200 && response.status < 300,
+            status: response.status,
+            statusText: response.statusText,
+        };
+    }
+
+    private static async safeRequest<T>(promise: Promise<AxiosResponse<T>>): Promise<APIResponse<T>> {
         try {
-            const url = this.BASE_URL + 'csrf/';
-            const response = await Ajax.get(url);
-            const data = await response.json()
-            return data.csrfToken
+            const response = await promise;
+            return this.handleResponse(response);
+        } catch (error: any) {
+            if (error.response) {
+                return this.handleResponse(error.response);
+            }
+            throw error; // Network or unexpected error
+        }
+    }
+
+    static async getCsrfToken(): Promise<string | null> {
+        try {
+            const response = await this.getInstance().get("csrf/");
+            return response.data.csrfToken;
         } catch (error) {
-            console.error('Failed to fetch CSRF token:', error);
+            console.error("Failed to fetch CSRF token:", error);
             return null;
         }
-    },
+    }
 
-    async getSession() {
-        const url = this.BASE_URL + 'users/check/'
-        return Ajax.get(url)
-    },
+    static async getSession() {
+        return this.safeRequest(this.getInstance().get("users/check/"));
+    }
 
-    async getDishes(postfix: string) {
-        let url = this.BASE_URL + "dishes/";
-        if (postfix !== '') {
-            url += postfix;
-        }
-        return Ajax.get(url);
-    },
+    static async getDishes(postfix: string) {
+        const url = postfix ? `dishes/${postfix}` : "dishes/";
+        return this.safeRequest(this.getInstance().get(url));
+    }
 
-    async getDish(id: string) {
-        const url = this.BASE_URL + `dishes/${id}/`;
-        return Ajax.get(url);
-    },
+    static async getDish(id: string) {
+        return this.safeRequest(this.getInstance().get(`dishes/${id}/`));
+    }
 
-    async login({email, password}:LoginParams) {
-        const url = this.BASE_URL + '/login/'
-        const body = {
-            email: email,
-            password: password
-        }
-        return Ajax.post({url, body})
-    },
+    static async login({ email, password }: LoginParams) {
+        return this.safeRequest(this.getInstance().post("login/", { email, password }));
+    }
 
-    async logout() {
-        const url = this.BASE_URL + 'logout/';
-        const body = {};
-        return Ajax.post({url, body})
-    },
+    static async logout() {
+        return this.safeRequest(this.getInstance().post("logout/", {}));
+    }
 
-    async auth({email, password}:LoginParams) {
-        const url = this.BASE_URL + '/users/auth/'
-        const body = {
-            email: email,
-            password: password
-        }
-        return Ajax.post({url, body})
-    },
+    static async auth({ email, password }: LoginParams) {
+        return this.safeRequest(this.getInstance().post("users/auth/", { email, password }));
+    }
 
-    async getDinners(filters?: { date_from?: string; date_to?: string; status?: string }) {
+    static async getDinners(filters?: { date_from?: string; date_to?: string; status?: string }) {
         const query = new URLSearchParams(filters).toString();
-        const url = `${this.BASE_URL}dinners/?${query}`;
-        return Ajax.get(url);
-    },         
+        return this.safeRequest(this.getInstance().get(`dinners/?${query}`));
+    }
 
-    async getDinnerById(id: number){
-        const url = this.BASE_URL + `dinners/${id}/`
-        return Ajax.get(url)
-    },
-    
-    async addDishToDraft(id: number){
-        const url = this.BASE_URL + `/dishes/${id}/draft/`;
-        const body = {}
-        return Ajax.post({url, body});
-    },
+    static async getDinnerById(id: number) {
+        return this.safeRequest(this.getInstance().get(`dinners/${id}/`));
+    }
 
-    async changeAddFields(id:number, tableNumber?: number) {
-        const url = this.BASE_URL + `dinners/${id}/edit`;
-        const body = {
-            table_number: tableNumber
-        }
+    static async addDishToDraft(id: number) {
+        return this.safeRequest(this.getInstance().post(`dishes/${id}/draft/`, {}));
+    }
 
-        return Ajax.put({url, body})
-    },
+    static async changeAddFields(id: number, tableNumber?: number) {
+        return this.safeRequest(this.getInstance().put(`dinners/${id}/edit`, { table_number: tableNumber }));
+    }
 
-    async changeDishFields(dinnerId: number, dishId: number, guest?: string, count?: number){
-        const url = this.BASE_URL + `dinners/${dinnerId}/dishes/${dishId}/`;
-        const body: any = {};
+    static async changeDishFields(dinnerId: number, dishId: number, guest?: string, count?: number) {
+        const body: Record<string, any> = {};
         if (guest) body.guest = guest;
         if (count) body.count = count;
+        return this.safeRequest(this.getInstance().put(`dinners/${dinnerId}/dishes/${dishId}/`, body));
+    }
 
-        return Ajax.put({url, body})
-    },
+    static async deleteDishFromDraft(dinnerId: number, dishId: number) {
+        return this.safeRequest(this.getInstance().delete(`dinners/${dinnerId}/dishes/${dishId}/`));
+    }
 
-    async deleteDishFromDraft(dinnerId: number, dishId: number) {
-        const url = this.BASE_URL + `dinners/${dinnerId}/dishes/${dishId}/`;
-        const body = {}
-        return Ajax.delete({url, body})
-    },
+    static async formDinner(dinnerId: number) {
+        return this.safeRequest(this.getInstance().put(`dinners/${dinnerId}/form/`, { status: "f" }));
+    }
 
-    async formDinner(dinnerId: number) {
-        const url = this.BASE_URL + `dinners/${dinnerId}/form/`;
-        const body = {
-            status: 'f'
-        }
-        return Ajax.put({url, body});
-    },
+    static async deleteDinner(dinnerId: number) {
+        return this.safeRequest(this.getInstance().delete(`dinners/${dinnerId}/`));
+    }
 
-    async deleteDinner(dinnerId: number) {
-        const url = this.BASE_URL + `dinners/${dinnerId}/`;
-        const body = {}
-        return Ajax.delete({url, body});
-    },
-
-    async updateProfile(email?: string, password?: string) {
-        const url = this.BASE_URL + 'users/profile/';
-        const body: any = {};
+    static async updateProfile(email?: string, password?: string) {
+        const body: Record<string, any> = {};
         if (email) body.email = email;
         if (password) body.password = password;
-
-        return Ajax.put({url, body})
+        return this.safeRequest(this.getInstance().put("users/profile/", body));
     }
-};
+}
 
 export default APIClient;

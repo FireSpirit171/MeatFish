@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { login, logout } from "../store/userSlice";
 import { resetCart } from "../store/cartSlice";
+import { resetFilters } from "@/store/filterSlice";
 import ApiClient from "@/api/APIClient";
 import { getCookie, deleteCookie } from "../api/Utils";
 
@@ -31,10 +32,11 @@ const Header: FC = () => {
         try {
             const response = await ApiClient.logout();
             if (response.ok) {
+                router.push("/");
                 deleteCookie("session_id");
                 dispatch(resetCart());
+                dispatch(resetFilters());
                 dispatch(logout());
-                router.push("/");
             } else {
                 console.error("Ошибка при логауте");
             }
@@ -42,6 +44,7 @@ const Header: FC = () => {
             console.error("Ошибка при логауте:", error);
         }
     };
+    
 
     return (
         <header className="header">
@@ -80,7 +83,7 @@ const Header: FC = () => {
                             className="header__logout-icon"
                             onClick={handleLogout}
                         />
-                    </>
+                    </> 
                 ) : (
                     <Link href="/auth" className={`header__nav-item ${router.pathname === "/auth" ? "active" : ""}`}>
                         Войти
