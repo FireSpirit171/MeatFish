@@ -59,10 +59,11 @@ const APIClient = {
         return Ajax.post({url, body})
     },
 
-    async getDinners(){
-        const url = this.BASE_URL + 'dinners/';
+    async getDinners(filters?: { date_from?: string; date_to?: string; status?: string }) {
+        const query = new URLSearchParams(filters).toString();
+        const url = `${this.BASE_URL}dinners/?${query}`;
         return Ajax.get(url);
-    },
+    },         
 
     async getDinnerById(id: number){
         const url = this.BASE_URL + `dinners/${id}/`
