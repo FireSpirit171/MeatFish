@@ -1,9 +1,9 @@
-import { FC, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import APIClient from '../../api/APIClient';
+import { api } from "../../api/index"
 import { Dish } from '../../api/Types';
 import Breadcrumbs from '../../components/Breadcrumbs';
 import { mockDishes } from '../../mockdata';
+import { FC, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 const DishPage: FC = () => {
   const { id } = useRouter().query;
@@ -14,13 +14,17 @@ const DishPage: FC = () => {
   useEffect(() => {
     const fetchDish = async () => {
       try {
+        // Добавим таймаут, чтобы запрос не зависал
         const timeout = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Таймаут запроса')), 2000)
         );
 
-        const response = await Promise.race([APIClient.getDish(id as string), timeout]);
-        const data = await response.json();
-        setDish(data);
+        const response = await Promise.race([
+          api.dishes.dishesRead(id as string), // Используем сгенерированный метод
+          timeout,
+        ]);
+        
+        setDish(response.data);  // Данные приходят уже в `response.data`
       } catch (error: any) {
         const mockDish = mockDishes.dishes.find(dish => dish.id.toString() === id);
         if (mockDish) {
