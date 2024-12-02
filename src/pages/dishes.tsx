@@ -87,7 +87,9 @@ const MainPage: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="loading">Загрузка...</div>;
+    return <div className="loading">
+      <img src="/loading.webp"/>
+    </div>;
   }
 
   return (
