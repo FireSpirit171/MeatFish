@@ -13,14 +13,12 @@
 
     &__center
         display: flex
-        justify-content: center
         width: 100%
 
     &__title-container
         &__title
             color: #000
             font-size: 48px
-            font-style: italic
 
     &__nav
         display: flex
@@ -50,16 +48,27 @@
             height: 2px
             background-color: #000
     
+    &__user
+        display: flex
+        flex-direction: column
+        align-items: center
+        gap: 5px
+        margin-left: 20px
+
     &__user-icon
         width: 60px
         height: 60px
         border-radius: 50%
-        margin-left: 20px
         cursor: pointer
         transition: transform 0.2s
 
         &:hover
             transform: scale(1.1)
+    
+    &__user-email
+        font-size: 16px
+        font-weight: bold
+        color: #000
 
 
 @media screen and (max-width: 600px)

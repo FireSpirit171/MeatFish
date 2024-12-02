@@ -10,15 +10,15 @@ import { getCookie } from "../api/Utils";
 const Header: FC = () => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { isLoggedIn } = useSelector((state: RootState) => state.user);
+    const { isLoggedIn, userName } = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
         const sessionId = getCookie('session_id');
         if (sessionId) {
             const checkSession = async () => {
                 const response = await ApiClient.getSession();
-                const data = await response.json()
-                if (data.status == 'ok' && data.username) {
+                const data = await response.json();
+                if (data.status === 'ok' && data.username) {
                     dispatch(login(data.username));
                 }
             };
@@ -29,7 +29,7 @@ const Header: FC = () => {
     return (
         <header className="header">
             <Link href="/">
-                <img src="/logo.png" width="120" height="120" alt="Логотип" className="header__img1"/>
+                <img src="/logo.png" width="120" height="120" alt="Логотип" className="header__img1" />
             </Link>
             <div className="header__center">
                 <div className="header__title-container">
@@ -46,13 +46,16 @@ const Header: FC = () => {
                     Заказы
                 </Link>
                 {isLoggedIn ? (
-                    <Link href="/profile">
-                        <img
-                            src="/default_user.png"
-                            alt="User"
-                            className="header__user-icon"
-                        />
-                    </Link>
+                    <div className="header__user">
+                        <Link href="/profile">
+                            <img
+                                src="/default_user.png"
+                                alt="User"
+                                className="header__user-icon"
+                            />
+                        </Link>
+                        <span className="header__user-email">{userName}</span>
+                    </div>
                 ) : (
                     <Link href="/auth" className={`header__nav-item ${router.pathname === "/auth" ? "active" : ""}`}>
                         Войти
