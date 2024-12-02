@@ -22,7 +22,7 @@ const DishPage: FC = () => {
         const response = await Promise.race([
           api.dishes.dishesRead(id as string), // Используем сгенерированный метод
           timeout,
-        ]);
+        ]) as any;
         
         setDish(response.data);  // Данные приходят уже в `response.data`
       } catch (error: any) {
