@@ -1,103 +1,77 @@
-import { FC, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
-import { login } from "../store/userSlice";
-import ApiClient from "../api/APIClient";
-
-interface SessionResponse {
-    status: string;
-    username: string;
-}
-
-interface AuthResponse {
-    status: string;
-    username: string;
-}
+import { FC, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { registerUser, loginUser } from '../store/userSlice';
+import { RootState } from '../store/store';
 
 const Auth: FC = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [isRegister, setIsRegister] = useState(false);
-    const dispatch = useDispatch();
-    const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isRegister, setIsRegister] = useState(false);
+  const dispatch = useDispatch<any>();
+  const router = useRouter();
 
-    const toggleAuthMode = () => setIsRegister((prev) => !prev);
+  const status = useSelector((state: RootState) => state.user.status);
+  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-    
-        try {
-            let response;
-            if (isRegister) {
-                response = await ApiClient.auth({ email, password });
-                const data = await response.json() as SessionResponse;
-                if (data.status == "Success") {
-                    const authResponse = await ApiClient.login({ email, password });
-                    const authData = await authResponse.json() as AuthResponse;
-    
-                    if (authData.status === "ok") {
-                        dispatch(login(authData.username)); 
-                        router.push("/dishes");
-                    } else {
-                        console.log("Ошибка при авторизации");
-                    }
-                } else {
-                    console.log("Ошибка регистрации");  
-                }
-            } else {
-                response = await ApiClient.login({ email, password });
-                const data = await response.json() as SessionResponse;
-    
-                if (data.status == "ok") {
-                    dispatch(login(data.username));
-                    router.push("/dishes");
-                } else {
-                    console.log("Неверный логин или пароль");
-                }
-            }
-        } catch (error) {
-            console.error("Ошибка:", error);
-            alert("Произошла ошибка. Попробуйте снова.");
-        }
-    };
-    
+  const toggleAuthMode = () => setIsRegister((prev) => !prev);
 
-    return (
-        <div className="auth-page">
-            <h1>{isRegister ? "Регистрация" : "Вход"}</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">Пароль:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">
-                    {isRegister ? "Зарегистрироваться" : "Войти"}
-                </button>
-            </form>
-            <p>
-                {isRegister ? "Уже есть аккаунт?" : "Нет аккаунта?"}{" "}
-                <button type="button" onClick={toggleAuthMode}>
-                    {isRegister ? "Войти" : "Регистрация"}
-                </button>
-            </p>
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push('/dishes');
+    }
+  }, [isLoggedIn, router]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (isRegister) {
+      dispatch(registerUser(email, password));
+    } else {
+      dispatch(loginUser(email, password));
+    }
+  };
+
+  const isLoading = status === 'loading';
+  const isFailed = status === 'failed';
+
+  return (
+    <div className="auth-page">
+      <h1>{isRegister ? 'Регистрация' : 'Вход'}</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
-    );
+        <div>
+          <label htmlFor="password">Пароль:</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Загрузка...' : isRegister ? 'Зарегистрироваться' : 'Войти'}
+        </button>
+      </form>
+      {isFailed && <p>Произошла ошибка. Попробуйте снова.</p>}
+      <p>
+        {isRegister ? 'Уже есть аккаунт?' : 'Нет аккаунта?'}{' '}
+        <button type="button" onClick={toggleAuthMode}>
+          {isRegister ? 'Войти' : 'Регистрация'}
+        </button>
+      </p>
+    </div>
+  );
 };
 
 export default Auth;
