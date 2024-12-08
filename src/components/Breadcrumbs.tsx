@@ -1,14 +1,11 @@
 import { FC } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 interface BreadcrumbsProps {
     dishName?: string;
 }
 
 const Breadcrumbs: FC<BreadcrumbsProps> = ({ dishName }) => {
-    const router = useRouter();
-    const pathnames = router.asPath.split("/").filter((x) => x && x !== "dishes");
 
     return (
         <nav className="breadcrumbs">

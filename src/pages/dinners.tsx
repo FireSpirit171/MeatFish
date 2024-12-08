@@ -14,7 +14,8 @@ const DinnersPage = () => {
     const fetchDinners = async () => {
       try {
         const response = await ApiClient.getDinners({ date_from: dateFrom, date_to: dateTo, status });
-        const data = await response.json();
+        const data = await response.json() as Dinner[];
+        console.log(data)
         setDinners(data);
       } catch (error) {
         console.error('Ошибка при загрузке заказов:', error);

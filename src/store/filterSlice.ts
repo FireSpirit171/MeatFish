@@ -18,7 +18,7 @@ const filterSlice = createSlice({
       state.minRange = action.payload.min;
       state.maxRange = action.payload.max;
     },
-    resetFilters(state) {
+    resetFilters() {
       return initialState;
     },
   },

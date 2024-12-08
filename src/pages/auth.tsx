@@ -4,6 +4,16 @@ import { useRouter } from "next/router";
 import { login } from "../store/userSlice";
 import ApiClient from "../api/APIClient";
 
+interface SessionResponse {
+    status: string;
+    username: string;
+}
+
+interface AuthResponse {
+    status: string;
+    username: string;
+}
+
 const Auth: FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -20,10 +30,10 @@ const Auth: FC = () => {
             let response;
             if (isRegister) {
                 response = await ApiClient.auth({ email, password });
-                const data = await response.json();
+                const data = await response.json() as SessionResponse;
                 if (data.status == "Success") {
                     const authResponse = await ApiClient.login({ email, password });
-                    const authData = await authResponse.json();
+                    const authData = await authResponse.json() as AuthResponse;
     
                     if (authData.status === "ok") {
                         dispatch(login(authData.username)); 
@@ -36,7 +46,7 @@ const Auth: FC = () => {
                 }
             } else {
                 response = await ApiClient.login({ email, password });
-                const data = await response.json();
+                const data = await response.json() as SessionResponse;
     
                 if (data.status == "ok") {
                     dispatch(login(data.username));

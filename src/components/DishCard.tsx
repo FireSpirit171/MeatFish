@@ -3,7 +3,12 @@ import { useRouter } from "next/router";
 import { Dish } from "../api/Types";
 import ApiClient from "../api/APIClient";
 import { useDispatch } from "react-redux";
-import { setDraftDinner, setTotalDishCount } from "../store/cartSlice"; 
+import { setDraftDinner, setTotalDishCount } from "../store/cartSlice";
+
+interface AddDishResponse {
+  draft_dinner_id: number,
+  total_dish_count: number,
+}
 
 const DishCard: FC<{ dish: Dish }> = ({ dish }) => {
   const router = useRouter();
@@ -17,7 +22,7 @@ const DishCard: FC<{ dish: Dish }> = ({ dish }) => {
     event.stopPropagation();
     try {
       const response = await ApiClient.addDishToDraft(dish.id);
-      const data = await response.json()
+      const data = await response.json() as AddDishResponse
 
       if (data.draft_dinner_id) {
         dispatch(setDraftDinner({

@@ -1,4 +1,4 @@
-import { api } from "../../api/index"
+import { api } from "../../api/index";
 import { Dish } from '../../api/Types';
 import Breadcrumbs from '../../components/Breadcrumbs';
 import { mockDishes } from '../../mockdata';
@@ -15,22 +15,26 @@ const DishPage: FC = () => {
     const fetchDish = async () => {
       try {
         // Добавим таймаут, чтобы запрос не зависал
-        const timeout = new Promise((_, reject) =>
+        const timeout = new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('Таймаут запроса')), 2000)
         );
 
         const response = await Promise.race([
           api.dishes.dishesRead(id as string), // Используем сгенерированный метод
           timeout,
-        ]) as any;
-        
-        setDish(response.data);  // Данные приходят уже в `response.data`
-      } catch (error: any) {
-        const mockDish = mockDishes.dishes.find(dish => dish.id.toString() === id);
-        if (mockDish) {
-          setDish(mockDish);
+        ]) as unknown as { data: Dish };
+
+        setDish(response.data); // Данные приходят уже в `response.data`
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          const mockDish = mockDishes.dishes.find(dish => dish.id.toString() === id);
+          if (mockDish) {
+            setDish(mockDish);
+          }
+          setError(error.message);
+        } else {
+          setError('Ошибка загрузки блюда');
         }
-        setError(error.message || 'Ошибка загрузки блюда');
       } finally {
         setDishLoading(false);
       }

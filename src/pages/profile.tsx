@@ -22,8 +22,8 @@ const ProfilePage = () => {
       dispatch(login(email));
       setPassword("");
       alert("Данные успешно обновлены.");
-    } catch (err: any) {
-      setError(err.message || "Ошибка при обновлении профиля.");
+    } catch (err) {
+      setError((err as Error).message || "Ошибка при обновлении профиля.");
     } finally {
       setIsLoading(false);
     }

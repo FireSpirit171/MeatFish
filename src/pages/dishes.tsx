@@ -6,12 +6,18 @@ import { mockDishes } from "../mockdata";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { setPriceRange } from "../store/filterSlice";
-import { setDraftDinner, setTotalDishCount } from "../store/cartSlice";
+import { setDraftDinner } from "../store/cartSlice";
 import { useRouter } from "next/router";
 
-const debounce = (func: Function, delay: number) => {
+interface DishesResponse {
+  dishes: Dish[]
+  draft_dinner_id: number,
+  total_dish_count: number
+}
+
+const debounce = <T extends (...args: any[]) => void>(func: T, delay: number): ((...args: Parameters<T>) => void) => {
   let timer: NodeJS.Timeout;
-  return (...args: any[]) => {
+  return (...args: Parameters<T>) => {
     clearTimeout(timer);
     timer = setTimeout(() => func(...args), delay);
   };
@@ -27,35 +33,45 @@ const MainPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const getDishes = async (minPrice?: number, maxPrice?: number) => {
+  const getDishes = async (minPrice?: number, maxPrice?: number): Promise<void> => {
     try {
       let url = "";
       if (minPrice !== undefined && maxPrice !== undefined) {
         url += `?min_price=${minPrice}&max_price=${maxPrice}`;
       }
 
-      const timeout = new Promise((_, reject) =>
+      const timeout = new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error("Таймаут запроса")), 2000)
       );
 
-      const response: any = await Promise.race([APIClient.getDishes(url), timeout]);
-      const data = await response.json();
+      const response = await Promise.race([
+        APIClient.getDishes(url),
+        timeout,
+      ]);
+      const data = await response.json() as DishesResponse;
 
       setDishes(data.dishes);
-      dispatch(setDraftDinner({
-        draftDinnerId: data.draft_dinner_id,
-        totalDishCount: data.total_dish_count
-      }));
+      dispatch(
+        setDraftDinner({
+          draftDinnerId: data.draft_dinner_id,
+          totalDishCount: data.total_dish_count,
+        })
+      );
       setLoading(false);
-    } catch (error: any) {
-      const filteredMockDishes = mockDishes.dishes.filter((dish) => {
-        const withinMinPrice = minPrice !== undefined ? dish.price >= minPrice : true;
-        const withinMaxPrice = maxPrice !== undefined ? dish.price <= maxPrice : true;
-        return withinMinPrice && withinMaxPrice;
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        const filteredMockDishes = mockDishes.dishes.filter((dish) => {
+          const withinMinPrice = minPrice !== undefined ? dish.price >= minPrice : true;
+          const withinMaxPrice = maxPrice !== undefined ? dish.price <= maxPrice : true;
+          return withinMinPrice && withinMaxPrice;
+        });
 
-      setDishes(filteredMockDishes);
-      setError(error.message || "Ошибка загрузки данных");
+        setDishes(filteredMockDishes);
+        setError(err.message);
+      } else {
+        setError("Ошибка загрузки данных");
+        console.log(error)
+      }
       setLoading(false);
     }
   };
@@ -65,7 +81,7 @@ const MainPage: React.FC = () => {
       getDishes(minPrice, maxPrice);
     }, 500),
     []
-  );
+  );  
 
   useEffect(() => {
     debouncedGetDishes(minRange, maxRange);
@@ -87,9 +103,11 @@ const MainPage: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="loading">
-      <img src="/loading.webp"/>
-    </div>;
+    return (
+      <div className="loading">
+        <img src="/loading.webp" alt="Загрузка..." />
+      </div>
+    );
   }
 
   return (
@@ -108,9 +126,13 @@ const MainPage: React.FC = () => {
             <div
               className="main-page__basket-column__basket__img-container"
               onClick={totalDishCount > 0 ? handleGoToBasket : undefined}
-              style={{ cursor: totalDishCount > 0 ? 'pointer' : 'not-allowed' }}
+              style={{ cursor: totalDishCount > 0 ? "pointer" : "not-allowed" }}
             >
-              <img src="/basket.png" className="main-page__basket-column__basket__img" />
+              <img
+                src="/basket.png"
+                className="main-page__basket-column__basket__img"
+                alt="Корзина"
+              />
               <span className="main-page__basket-column__basket__dish-in-draft">
                 {totalDishCount}
               </span>

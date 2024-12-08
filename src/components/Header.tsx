@@ -9,6 +9,11 @@ import { resetFilters } from "@/store/filterSlice";
 import ApiClient from "@/api/APIClient";
 import { getCookie, deleteCookie } from "../api/Utils";
 
+interface SessionResponse {
+    status: string;
+    username?: string;
+}  
+
 const Header: FC = () => {
     const router = useRouter();
     const dispatch = useDispatch();
@@ -19,7 +24,7 @@ const Header: FC = () => {
         if (sessionId) {
             const checkSession = async () => {
                 const response = await ApiClient.getSession();
-                const data = await response.json();
+                const data = await response.json() as SessionResponse;
                 if (data.status === "ok" && data.username) {
                     dispatch(login(data.username));
                 }
@@ -54,7 +59,7 @@ const Header: FC = () => {
             <div className="header__center">
                 <div className="header__title-container">
                     <h1 className="header__title-container__title">
-                        <strong>Meat'n'Fish</strong>
+                        <strong>Meat&#39;n&#39;Fish</strong>
                     </h1>
                 </div>
             </div>
