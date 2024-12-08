@@ -3,35 +3,34 @@
 
 .home-page
   position: relative
-  height: calc( 100vh - 140px )  // Устанавливаем высоту на весь экран
+  height: calc( 100vh - 140px )
 
 .slider-item
-  height: calc( 100vh - 140px )  // Элемент слайдера должен занимать 100% высоты родительского контейнера
+  height: calc( 100vh - 140px ) 
   margin: 0
 
 .background-image
   width: 100%
-  height: calc( 100vh - 124px )  // Картинка будет занимать всю доступную ширину и высоту
-  object-fit: cover // Сохраняем пропорции, при этом картинка будет обрезана, если не помещается
-  object-position: center // Центрируем картинку в пределах контейнера
+  height: calc( 100vh - 124px ) 
+  object-fit: cover 
+  object-position: center
 
-// Стиль для точек слайдера
 .slick-dots
   position: absolute
-  top: 90%  // Располагаем точки ближе к верхней части картинки
+  top: 90%  
   left: 50%
   transform: translateX(-50%)
-  z-index: 200  // Устанавливаем z-index, чтобы они были видимы на фоне изображения
+  z-index: 200 
   display: flex
   justify-content: center
-  width: 100% // Чтобы точки были по центру слайдера
+  width: 100% 
   height: 50px
 
 .slick-dots li
-  margin: 0 5px // Отступы между точками
+  margin: 0 5px 
 
 .slick-dots li button
-  background-color: rgba(255, 255, 255, 0.7)  // Белые точки
+  background-color: rgba(255, 255, 255, 0.7)
   border-radius: 50%
   width: 10px
   height: 10px
@@ -40,7 +39,7 @@
   cursor: pointer
 
 .slick-dots li.slick-active button
-  background-color: #B01117  // Цвет активной точки
+  background-color: #B01117
 
 .home-page__content
   z-index: 100
