@@ -35,6 +35,8 @@ const DishPage: FC = () => {
         fetchDish();
     }, [id]);
 
+    const imageUrl = `http://192.168.190.224:9000/meatfish/${id}.jpg`;
+
     return (
         <>
             <Breadcrumbs dishName={!dishLoading && dish ? dish.name : undefined} />
@@ -43,7 +45,7 @@ const DishPage: FC = () => {
             ) : (
                 <div className="dish-container">
                     <div className="dish-container__img-container">
-                        <img src={dish?.photo} className="dish-container__img-container__img js-scale-img" alt={dish?.name} />
+                        <img src={imageUrl} className="dish-container__img-container__img js-scale-img" alt={dish?.name} />
                     </div>
                     <div className="dish-container__info-container">
                         <h1 className="dish-container__info-container__title">{dish?.name}</h1>

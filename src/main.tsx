@@ -38,7 +38,9 @@ const router = createBrowserRouter([
       </Layout>
     ),
   },
-]);
+], {
+  basename: '/'
+});
 
 function App() {
   useEffect(() => {
