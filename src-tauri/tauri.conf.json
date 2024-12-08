@@ -2,10 +2,10 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "MeatFish",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "com.bmstu.meatfish",
   "build": {
-    "frontendDist": "../build",
-    "devUrl": "http://192.168.102.224:3000",
+    "frontendDist": "../dist",
+    "devUrl": "http://192.168.190.224:3000",
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build"
   },

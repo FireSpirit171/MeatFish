@@ -35,6 +35,10 @@ const MainPage: React.FC = () => {
             setDraftId(data.draft_dinner_id);
             setDishesInBucket(data.total_dish_count);
             setLoading(false);
+            console.log(draftId);
+            if (error) {
+                console.log(error)
+            }
         } catch (error: any) {
             const filteredMockDishes = mockDishes.dishes.filter((dish) => {
                 const withinMinPrice = minPrice !== undefined ? dish.price >= minPrice : true;

@@ -1,14 +1,11 @@
 import { FC } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link} from "react-router-dom";
 
 interface BreadcrumbsProps {
     dishName?: string;
 }
 
 const Breadcrumbs: FC<BreadcrumbsProps> = ({ dishName }) => {
-    const location = useLocation();
-    const pathnames = location.pathname.split("/").filter((x) => x && x !== "dishes");
-
     return (
         <nav className="breadcrumbs">
             <Link to="/dishes" className="breadcrumbs__link">Меню</Link>

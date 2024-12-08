@@ -10,6 +10,9 @@ import Layout from './components/Layout/Layout';
 import HomePage from './pages/HomePage/HomePage';
 import { useEffect } from 'react';
 
+import { invoke } from '@tauri-apps/api/core';
+// import { dest_root } from '../target_config'
+
 const router = createBrowserRouter([
   {
     path: '/dishes/',
@@ -39,19 +42,15 @@ const router = createBrowserRouter([
 
 function App() {
   useEffect(() => {
-    if (window.TAURI) {
-      const { invoke } = window.TAURI.tauri;
+    invoke('create')
+      .then((response: any) => console.log('Create command response:', response))
+      .catch((error: any) => console.error('Error invoking create command:', error));
 
-      invoke('create')
-        .then((response: string) => console.log(response))
-        .catch((error: any) => console.error('Error:', error));
-
-      return () => {
-        invoke('close')
-          .then((response: string) => console.log(response))
-          .catch((error: any) => console.error('Error:', error));
-      };
-    }
+    return () => {
+      invoke('close')
+        .then((response: any) => console.log('Close command response:', response))
+        .catch((error: any) => console.error('Error invoking close command:', error));
+    };
   }, []);
 
   return (

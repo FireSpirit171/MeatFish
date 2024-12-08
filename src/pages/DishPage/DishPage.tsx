@@ -18,7 +18,7 @@ const DishPage: FC = () => {
                     setTimeout(() => reject(new Error("Таймаут запроса")), 2000)
                 );
 
-                const response = await Promise.race([APIClient.getDish(id), timeout]);
+                const response = await Promise.race([APIClient.getDish(id as string), timeout]);
                 const data = await response.json();
                 setDish(data);
             } catch (error: any) {
