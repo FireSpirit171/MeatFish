@@ -1,61 +1,91 @@
-.background-gif
-    position: fixed
-    width: 100%
-    height: 100%
-    z-index: 50
-    object-fit: cover
-    object-position: center
+@import "~slick-carousel/slick/slick.css"
+@import "~slick-carousel/slick/slick-theme.css"
 
 .home-page
+  position: relative
+  height: calc( 100vh - 140px )  // Устанавливаем высоту на весь экран
+
+.slider-item
+  height: calc( 100vh - 140px )  // Элемент слайдера должен занимать 100% высоты родительского контейнера
+  margin: 0
+
+.background-image
+  width: 100%
+  height: calc( 100vh - 124px )  // Картинка будет занимать всю доступную ширину и высоту
+  object-fit: cover // Сохраняем пропорции, при этом картинка будет обрезана, если не помещается
+  object-position: center // Центрируем картинку в пределах контейнера
+
+// Стиль для точек слайдера
+.slick-dots
+  position: absolute
+  top: 90%  // Располагаем точки ближе к верхней части картинки
+  left: 50%
+  transform: translateX(-50%)
+  z-index: 200  // Устанавливаем z-index, чтобы они были видимы на фоне изображения
+  display: flex
+  justify-content: center
+  width: 100% // Чтобы точки были по центру слайдера
+  height: 50px
+
+.slick-dots li
+  margin: 0 5px // Отступы между точками
+
+.slick-dots li button
+  background-color: rgba(255, 255, 255, 0.7)  // Белые точки
+  border-radius: 50%
+  width: 10px
+  height: 10px
+  display: block
+  padding: 0
+  cursor: pointer
+
+.slick-dots li.slick-active button
+  background-color: #B01117  // Цвет активной точки
+
+.home-page__content
+  z-index: 100
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  text-align: center
+  font-size: 36px
+
+  &__title
+    color: #000
+    -webkit-text-stroke: 1px #ffffff50
+
+  &__buttons
+    display: flex
+    flex-direction: row
+    justify-content: center
+    margin-top: 20px
+
+    &__button
+      width: 150px
+      height: 40px
+      font-size: 16px
+      cursor: pointer
+      border: solid
+      border-weight: 2px
+      border-color: #B01117
+      border-radius: 5px
+      background-color: #fff
+      color: #000
+      transition: background-color 0.3s, color 0.3s
+
+      &:hover
+        background-color: #B01117
+        color: white
+
+@media screen and (max-width: 600px)
+  .home-page
     &__content
-        z-index: 100
-        position: absolute
-        top: 50%
-        left: 50%
-        transform: translate(-50%, -50%) 
-        text-align: center
-        font-size: 36px
+      font-size: 24px
+      &__buttons
+        justify-content: center
 
-        &__title
-            color: #000
-            -webkit-text-stroke: 1px #ffffff50
-
-        &__buttons
-            display: flex
-            flex-direction: row
-            justify-content: center 
-            margin-top: 20px
-
-            &__button
-                width: 150px
-                height: 40px
-                font-size: 16px
-                cursor: pointer
-                border: solid
-                border-weight: 2px
-                border-color: #B01117
-                border-radius: 5px
-                background-color: #fff
-                color: #000
-                transition: background-color 0.3s, color 0.3s 
-
-                &:hover
-                    background-color: #B01117
-                    color: white
-
-@media screen and (max-width: 600px) 
-    .background-gif 
-        background-size: cover
-        background-position: center
-
-    .home-page 
-        &__content 
-            font-size: 24px
-
-            &__buttons 
-                justify-content: center
-            
-            &__buttons__button 
-                width: 120px
-                height: 35px
-                font-size: 14px
+    .home-page__content__button
+      width: 120px
+      height: 35px
+      font-size: 14px
