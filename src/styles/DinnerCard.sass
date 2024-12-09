@@ -1,0 +1,48 @@
+.dinners-list
+  width: 100%
+
+.dinner-card
+  display: flex
+  justify-content: space-between
+  align-items: center
+  width: 80%
+  margin: 0 auto 16px
+  padding: 16px
+  border-radius: 8px
+  border: 2px solid #B01117
+  background-color: #fff
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+  font-family: Arial, sans-serif
+  cursor: pointer
+  transition: transform 0.2s ease-in-out
+
+  &:hover
+    transform: scale(1.02)
+
+  .dinner-info
+    flex: 1
+
+    h2
+      font-size: 1.5rem
+      margin-bottom: 8px
+
+    p
+      font-size: 1rem
+      margin: 4px 0
+
+    .status
+      color: #B01117
+      font-weight: bold
+
+  &.f
+    border-color: #fff
+    .status
+      color: #B01117
+
+  .qr-container
+    width: 150px
+    text-align: center
+
+  .qr-code
+    width: 100%
+    height: auto
