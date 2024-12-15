@@ -7,7 +7,10 @@ import { login, logout } from "../store/userSlice";
 import { resetCart } from "../store/cartSlice";
 import { resetFilters } from "@/store/filterSlice";
 import ApiClient from "@/api/APIClient";
-import { getCookie, deleteCookie } from "../api/Utils";
+import { getCookie } from "../api/Utils";
+import { logoutUser } from "../store/userSlice";
+import { ThunkDispatch } from "@reduxjs/toolkit";
+import { AnyAction } from "redux";
 
 interface SessionResponse {
     status: string;
@@ -16,7 +19,7 @@ interface SessionResponse {
 
 const Header: FC = () => {
     const router = useRouter();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
     const { isLoggedIn, userName } = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
@@ -35,21 +38,16 @@ const Header: FC = () => {
 
     const handleLogout = async () => {
         try {
-            const response = await ApiClient.logout();
-            if (response.ok) {
-                router.push("/");
-                deleteCookie("session_id");
-                dispatch(resetCart());
-                dispatch(resetFilters());
-                dispatch(logout());
-            } else {
-                console.error("Ошибка при логауте");
-            }
+            // Диспатчим асинхронный экшен для логаута
+            await dispatch(logoutUser()).unwrap(); // Используем unwrap для работы с результатом
+            dispatch(resetCart());
+            dispatch(resetFilters());
+            dispatch(logout());
+            router.push("/");  // Перенаправляем после успешного логаута
         } catch (error) {
             console.error("Ошибка при логауте:", error);
         }
     };
-    
 
     return (
         <header className="header">
