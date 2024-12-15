@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import ApiClient from '../api/APIClient';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store/store';
+import { fetchDinners, setFilters } from '../store/dinnerSlice';
 import DinnerCard from '../components/DinnerCard';
 import { Dinner } from '@/api/Types';
+import { ThunkDispatch } from '@reduxjs/toolkit';
+import { AnyAction } from 'redux';
 
 const TableHeader = () => (
   <div className="table-header">
@@ -17,40 +21,34 @@ const TableHeader = () => (
 );
 
 const DinnersPage = () => {
-  const [dinners, setDinners] = useState<Dinner[]>([]);
-  const [dateFrom, setDateFrom] = useState<string>('');
-  const [dateTo, setDateTo] = useState<string>('');
-  const [status, setStatus] = useState<string>('');
+  const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
   const router = useRouter();
+  const { dinners, dateFrom, dateTo, status, loading, error } = useSelector((state: RootState) => state.dinners);
+
+  useEffect(() => {
+    dispatch(fetchDinners());
+  }, [dispatch, dateFrom, dateTo, status]);
 
   const handleRowClick = (id: number) => {
     router.push(`/dinners/${id}`);
   };
 
-  useEffect(() => {
-    const fetchDinners = async () => {
-      try {
-        const response = await ApiClient.getDinners({ date_from: dateFrom, date_to: dateTo, status });
-        const data = (await response.json()) as Dinner[];
-        setDinners(data);
-      } catch (error) {
-        console.error('Ошибка при загрузке заказов:', error);
-      }
-    };
-
-    fetchDinners();
-  }, [dateFrom, dateTo, status]);
+  const handleFilterChange = () => {
+    dispatch(setFilters({ dateFrom, dateTo, status }));
+    dispatch(fetchDinners());
+  };
 
   return (
     <div className="dinners-page">
       <h1>Ваши заказы</h1>
+      {error && <div className="error">{error}</div>}
       <div className="filters">
         <label>
           Дата от:
           <input
             type="date"
             value={dateFrom}
-            onChange={(e) => setDateFrom(e.target.value)}
+            onChange={(e) => dispatch(setFilters({ dateFrom: e.target.value, dateTo, status }))}
           />
         </label>
         <label>
@@ -58,12 +56,12 @@ const DinnersPage = () => {
           <input
             type="date"
             value={dateTo}
-            onChange={(e) => setDateTo(e.target.value)}
+            onChange={(e) => dispatch(setFilters({ dateFrom, dateTo: e.target.value, status }))}
           />
         </label>
         <label>
           Статус:
-          <select value={status} onChange={(e) => setStatus(e.target.value)}>
+          <select value={status} onChange={(e) => dispatch(setFilters({ dateFrom, dateTo, status: e.target.value }))}>
             <option value="">Все</option>
             <option value="f">В работе</option>
             <option value="c">Завершена</option>
@@ -75,20 +73,25 @@ const DinnersPage = () => {
       {/* Заголовок таблицы */}
       <TableHeader />
 
-      <div className="dinners-list">
-        {dinners.map((dinner) => (
-          <DinnerCard
-            key={dinner.id}
-            id={dinner.id}
-            tableNumber={dinner.table_number}
-            status={dinner.status as 'f' | 'c' | 'r'}
-            formedAt={dinner.formed_at}
-            totalCost={dinner.total_cost}
-            qr={dinner.status !== 'f' ? dinner.qr : undefined}
-            onClick={() => handleRowClick(dinner.id)}
-          />
-        ))}
-      </div>
+      {/* Список заказов */}
+      {loading ? (
+        <div>Загрузка...</div>
+      ) : (
+        <div className="dinners-list">
+          {dinners.map((dinner: Dinner) => (
+            <DinnerCard
+              key={dinner.id}
+              id={dinner.id}
+              tableNumber={dinner.table_number}
+              status={dinner.status as 'f' | 'c' | 'r'}
+              formedAt={dinner.formed_at}
+              totalCost={dinner.total_cost}
+              qr={dinner.status !== 'f' ? dinner.qr : undefined}
+              onClick={() => handleRowClick(dinner.id)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
