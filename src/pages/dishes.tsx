@@ -4,15 +4,15 @@ import { Dish } from "../api/Types";
 import DishCard from "../components/DishCard";
 import { mockDishes } from "../mockdata";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { RootState, AppDispatch } from "../store/store";
 import { setPriceRange } from "../store/filterSlice";
 import { setDraftDinner } from "../store/cartSlice";
 import { useRouter } from "next/router";
 
 interface DishesResponse {
-  dishes: Dish[]
-  draft_dinner_id: number,
-  total_dish_count: number
+  dishes: Dish[];
+  draft_dinner_id: number;
+  total_dish_count: number;
 }
 
 const debounce = <T extends (...args: any[]) => void>(func: T, delay: number): ((...args: Parameters<T>) => void) => {
@@ -24,7 +24,7 @@ const debounce = <T extends (...args: any[]) => void>(func: T, delay: number): (
 };
 
 const MainPage: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { minRange, maxRange } = useSelector((state: RootState) => state.filter);
   const { totalDishCount, draftDinnerId } = useSelector((state: RootState) => state.cart);
@@ -44,19 +44,14 @@ const MainPage: React.FC = () => {
         setTimeout(() => reject(new Error("Таймаут запроса")), 2000)
       );
 
-      const response = await Promise.race([
-        APIClient.getDishes(url),
-        timeout,
-      ]);
+      const response = await Promise.race([APIClient.getDishes(url), timeout]);
       const data = await response.json() as DishesResponse;
 
       setDishes(data.dishes);
-      dispatch(
-        setDraftDinner({
-          draftDinnerId: data.draft_dinner_id,
-          totalDishCount: data.total_dish_count,
-        })
-      );
+      dispatch(setDraftDinner({
+        draftDinnerId: data.draft_dinner_id,
+        totalDishCount: data.total_dish_count,
+      }));
       setLoading(false);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -70,7 +65,7 @@ const MainPage: React.FC = () => {
         setError(err.message);
       } else {
         setError("Ошибка загрузки данных");
-        console.log(error)
+        console.log(error);
       }
       setLoading(false);
     }
@@ -81,7 +76,7 @@ const MainPage: React.FC = () => {
       getDishes(minPrice, maxPrice);
     }, 500),
     []
-  );  
+  );
 
   useEffect(() => {
     debouncedGetDishes(minRange, maxRange);
@@ -96,6 +91,7 @@ const MainPage: React.FC = () => {
     }
   };
 
+  // Функция handleGoToBasket
   const handleGoToBasket = () => {
     if (draftDinnerId) {
       router.push(`/dinners/${draftDinnerId}`);
