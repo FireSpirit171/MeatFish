@@ -38,31 +38,20 @@ export const loginUser = (email: string, password: string): AppThunk => async (d
   }
 };
 
-// Асинхронный экшен для регистрации
-export const registerUser = (email: string, password: string): AppThunk => async (dispatch) => {
-  try {
-    dispatch(setStatus('loading'));
-    const response = await ApiClient.auth({ email, password });
-    const data = await response.json() as SessionResponse;
-
-    if (data.status === 'Success') {
-      const loginResponse = await ApiClient.login({ email, password });
-      const loginData = await loginResponse.json() as SessionResponse;
-      if (loginData.status === 'ok') {
-        dispatch(login(loginData.username));
-      } else {
-        console.log('Ошибка при авторизации');
-        dispatch(setStatus('failed'));
-      }
-    } else {
-      console.log('Ошибка регистрации');
-      dispatch(setStatus('failed'));
+// Асинхронный экшен для обновления профиля
+export const updateProfile = createAsyncThunk(
+  'user/updateProfile',
+  async (profileData: { email: string; password: string | undefined }, { dispatch, getState }) => {
+    try {
+      const response = await ApiClient.updateProfile(profileData.email, profileData.password);
+      const { user } = getState() as { user: UserState };
+      dispatch(login(profileData.email));
+      return profileData.email;
+    } catch (error) {
+      throw new Error('Ошибка при обновлении профиля');
     }
-  } catch (error) {
-    console.error('Ошибка:', error);
-    dispatch(setStatus('failed'));
   }
-};
+);
 
 // Асинхронный экшен для логаута
 export const logoutUser = createAsyncThunk(
@@ -110,6 +99,14 @@ const userSlice = createSlice({
       .addCase(logoutUser.rejected, (state, action) => {
         state.status = 'failed';
         console.error(action.payload);
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.userName = action.payload;
+        state.status = 'idle';
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.status = 'failed';
+        console.error(action.error.message);
       });
   },
 });
@@ -117,3 +114,4 @@ const userSlice = createSlice({
 export const { login, logout, setStatus } = userSlice.actions;
 
 export default userSlice.reducer;
+

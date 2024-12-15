@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/store/store";
-import { login } from "@/store/userSlice";
-import APIClient from "@/api/APIClient";
+import { RootState, AppDispatch } from "@/store/store";
+import { updateProfile } from "@/store/userSlice";
 
 const ProfilePage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const userName = useSelector((state: RootState) => state.user.userName);
 
   const [email, setEmail] = useState(userName || "");
@@ -18,10 +17,8 @@ const ProfilePage = () => {
     setError(null);
 
     try {
-      await APIClient.updateProfile(email, password || undefined);
-      dispatch(login(email));
+      await dispatch(updateProfile({ email, password: password || undefined })).unwrap();
       setPassword("");
-      alert("Данные успешно обновлены.");
     } catch (err) {
       setError((err as Error).message || "Ошибка при обновлении профиля.");
     } finally {
