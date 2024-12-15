@@ -2,9 +2,16 @@ import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
 import { setPriceRange } from "../store/filterSlice";
-import { fetchDishes } from "../store/dishesSlice";
+import { fetchDishes, setDishes } from "../store/dishesSlice";
+import { setDraftDinner } from "../store/cartSlice";
 import DishCard from "../components/DishCard";
 import { useRouter } from "next/router";
+import ApiClient from "../api/APIClient";
+
+interface AddDishResponse {
+  draft_dinner_id: number;
+  total_dish_count: number;
+}
 
 const debounce = <T extends (...args: any[]) => void>(func: T, delay: number): ((...args: Parameters<T>) => void) => {
   let timer: NodeJS.Timeout;
@@ -32,6 +39,26 @@ const MainPage: React.FC = () => {
   useEffect(() => {
     debouncedGetDishes(minRange, maxRange);
   }, [minRange, maxRange, debouncedGetDishes]);
+
+  useEffect(() => {
+    const fetchCartData = async () => {
+      try {
+        const response = await ApiClient.getDishes("");
+        const cartData: AddDishResponse = (await response.json()) as AddDishResponse;
+        console.log(cartData);
+        if (cartData) {
+          const { draft_dinner_id, total_dish_count } = cartData;
+          dispatch(setDraftDinner({
+            draftDinnerId: draft_dinner_id,
+            totalDishCount: total_dish_count,
+          }));
+        }
+      } catch (error) {
+        console.error("Ошибка при загрузке данных корзины:", error);
+      }
+    };
+    fetchCartData();
+  }, [dispatch]);
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
