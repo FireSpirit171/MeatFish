@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import ApiClient from '../api/APIClient'; // Убедитесь, что ApiClient подключен
+import ApiClient from '../api/APIClient';
 
 interface CartState {
   draftDinnerId: number | null;
@@ -11,13 +11,11 @@ interface AddDishResponse {
   total_dish_count: number;
 }
 
-// Начальное состояние
 const initialState: CartState = {
   draftDinnerId: null,
   totalDishCount: 0,
 };
 
-// Thunk для добавления блюда в корзину
 export const addDishToCartThunk = createAsyncThunk(
   'cart/addDishToCart',
   async (dishId: number, { dispatch }) => {
@@ -38,7 +36,6 @@ export const addDishToCartThunk = createAsyncThunk(
   }
 );
 
-// Thunk для удаления блюда из корзины
 export const removeDishFromCartThunk = createAsyncThunk(
   'cart/removeDishFromCart',
   async (dishId: number, { dispatch, getState }) => {
@@ -61,8 +58,6 @@ export const removeDishFromCartThunk = createAsyncThunk(
   }
 );
 
-
-// Слайс
 const cartSlice = createSlice({
   name: 'cart',
   initialState,

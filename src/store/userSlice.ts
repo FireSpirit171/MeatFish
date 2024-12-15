@@ -19,7 +19,6 @@ const initialState: UserState = {
   status: 'idle',
 };
 
-// Асинхронный экшен для логина
 export const loginUser = (email: string, password: string): AppThunk => async (dispatch) => {
   try {
     dispatch(setStatus('loading'));
@@ -38,7 +37,6 @@ export const loginUser = (email: string, password: string): AppThunk => async (d
   }
 };
 
-// Асинхронный экшен для обновления профиля
 export const updateProfile = createAsyncThunk(
   'user/updateProfile',
   async (profileData: { email: string; password: string | undefined }, { dispatch, getState }) => {
@@ -53,7 +51,6 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
-// Асинхронный экшен для логаута
 export const logoutUser = createAsyncThunk(
   'user/logout',
   async (_, { rejectWithValue }) => {

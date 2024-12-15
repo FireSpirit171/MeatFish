@@ -47,7 +47,6 @@ const dinnerSlice = createSlice({
 
 export const { setFilters, fetchDinnersStart, fetchDinnersSuccess, fetchDinnersFailure } = dinnerSlice.actions;
 
-// Асинхронный экшен для загрузки заказов
 export const fetchDinners = (): AppThunk => async (dispatch, getState) => {
   const { dateFrom, dateTo, status } = getState().dinners;
 
