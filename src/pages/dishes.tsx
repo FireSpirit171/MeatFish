@@ -91,7 +91,6 @@ const MainPage: React.FC = () => {
     }
   };
 
-  // Функция handleGoToBasket
   const handleGoToBasket = () => {
     if (draftDinnerId) {
       router.push(`/dinners/${draftDinnerId}`);

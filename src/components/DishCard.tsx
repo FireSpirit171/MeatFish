@@ -1,18 +1,13 @@
 import { FC } from "react";
 import { useRouter } from "next/router";
 import { Dish } from "../api/Types";
-import ApiClient from "../api/APIClient";
 import { useDispatch } from "react-redux";
-import { setDraftDinner, setTotalDishCount } from "../store/cartSlice";
-
-interface AddDishResponse {
-  draft_dinner_id: number,
-  total_dish_count: number,
-}
+import { AppDispatch } from "../store/store";
+import { addDishToCartAsync } from "../store/cartSlice"; 
 
 const DishCard: FC<{ dish: Dish }> = ({ dish }) => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleClick = () => {
     router.push(`/dishes/${dish.id}`);
@@ -21,16 +16,8 @@ const DishCard: FC<{ dish: Dish }> = ({ dish }) => {
   const handleAddToCart = async (event: React.MouseEvent) => {
     event.stopPropagation();
     try {
-      const response = await ApiClient.addDishToDraft(dish.id);
-      const data = await response.json() as AddDishResponse
-
-      if (data.draft_dinner_id) {
-        dispatch(setDraftDinner({
-          draftDinnerId: data.draft_dinner_id,
-          totalDishCount: data.total_dish_count
-        }));
-        dispatch(setTotalDishCount(data.total_dish_count)); 
-      }
+      const data = await dispatch(addDishToCartAsync(dish.id)).unwrap();
+      console.log('Данные из API:', data);
     } catch (error) {
       console.error("Ошибка при добавлении блюда в корзину:", error);
     }

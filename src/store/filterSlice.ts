@@ -43,7 +43,6 @@ const filterSlice = createSlice({
   },
 });
 
-// Thunk для загрузки блюд с API
 export const fetchDishes = (minPrice?: number, maxPrice?: number): AppThunk => async (dispatch) => {
   dispatch(setLoading(true));
   try {
@@ -59,11 +58,10 @@ export const fetchDishes = (minPrice?: number, maxPrice?: number): AppThunk => a
     const response = await Promise.race([APIClient.getDishes(url), timeout]);
     const data: any = await response.json();
     
-    dispatch(setDishes(data.dishes)); // Обновляем состояние с полученными блюдами
+    dispatch(setDishes(data.dishes));
     dispatch(setLoading(false));
   } catch (err: any) {
     if (err.message === "Таймаут запроса") {
-      // Фоллбек на mock данные при таймауте
       const filteredMockDishes = mockDishes.dishes.filter((dish) => {
         const withinMinPrice = minPrice !== undefined ? dish.price >= minPrice : true;
         const withinMaxPrice = maxPrice !== undefined ? dish.price <= maxPrice : true;
