@@ -4,6 +4,18 @@ import ApiClient from '../api/APIClient';
 import DinnerCard from '../components/DinnerCard';
 import { Dinner } from '@/api/Types';
 
+const TableHeader = () => (
+  <div className="table-header">
+    <div className="header-info">
+      <div className="header-item order-id">№ Заказа</div>
+      <div className="header-item table-number">№ Стола</div>
+      <div className="header-item status">Статус</div>
+      <div className="header-item date-formed">Дата оформления</div>
+      <div className="header-item qr">QR</div>
+    </div>
+  </div>
+);
+
 const DinnersPage = () => {
   const [dinners, setDinners] = useState<Dinner[]>([]);
   const [dateFrom, setDateFrom] = useState<string>('');
@@ -59,6 +71,10 @@ const DinnersPage = () => {
           </select>
         </label>
       </div>
+
+      {/* Заголовок таблицы */}
+      <TableHeader />
+
       <div className="dinners-list">
         {dinners.map((dinner) => (
           <DinnerCard

@@ -3,46 +3,101 @@
 
 .dinner-card
   display: flex
-  justify-content: space-between
   align-items: center
-  width: 80%
-  margin: 0 auto 16px
-  padding: 16px
-  border-radius: 8px
-  border: 2px solid #B01117
+  height: 20px
+  margin: 10px auto
+  padding: 8px 5%
+  border-radius: 10px
+  border: 1px solid #ddd
   background-color: #fff
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
   font-family: Arial, sans-serif
   cursor: pointer
-  transition: transform 0.2s ease-in-out
+  transition: background-color 0.3s, transform 0.3s
+  width: 70%
 
   &:hover
+    background-color: #f5f5f5
     transform: scale(1.02)
 
   .dinner-info
-    flex: 1
-
-    h2
-      font-size: 1.5rem
-      margin-bottom: 8px
-
-    p
-      font-size: 1rem
-      margin: 4px 0
-
-    .status
-      color: #B01117
-      font-weight: bold
-
-  &.f
-    border-color: #fff
-    .status
-      color: #B01117
-
-  .qr-container
-    width: 150px
-    text-align: center
-
-  .qr-code
+    display: flex
+    flex-direction: row
+    align-items: center
     width: 100%
-    height: auto
+
+    .order-id
+      width: 10%
+      font-size: 14px
+      margin-right: 10px
+
+    .table-number
+      width: 20%
+      font-size: 14px
+      margin-right: 10px
+      text-align: center
+
+    .status
+      width: 30%
+      font-size: 14px
+      margin-right: 10px
+      color: #B01117
+      text-align: center
+
+    .date-formed
+      width: 30%
+      font-size: 14px
+      margin-right: 10px
+      text-align: center
+
+  .dinner-icon
+    margin-left: auto
+    position: relative
+    display: flex
+    justify-content: center
+    align-items: center
+
+    .status-icon
+      width: 20px
+      height: 20px
+      cursor: pointer
+
+    .qr-hover-wrapper
+      position: relative
+
+      .qr-hover
+        display: none
+        position: absolute
+        top: 50%
+        left: calc(-100% - 100px)
+        transform: translateY(-50%) translateX(-80%) scale(1.5)
+        z-index: 1000
+        background-color: white
+        border: 1px solid #ccc
+        padding: 15px
+        border-radius: 4px
+        text-align: center
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2)
+
+        p
+          font-size: 12px
+
+        .qr-code
+          width: 120px
+          height: 120px
+
+    &:hover .qr-hover
+      display: block
+
+    .status-icon:hover::after
+      content: "\0412 \0440\0430\0431\043e\0442\0435"
+      position: absolute
+      bottom: -25px
+      left: 50%
+      transform: translateX(-50%)
+      background-color: #fff
+      color: #333
+      padding: 5px
+      border: 1px solid #ddd
+      border-radius: 4px
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+      font-size: 12px

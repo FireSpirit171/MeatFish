@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppThunk } from './store'; // Импорт AppThunk для использования в асинхронных экшенах
+import { AppThunk } from './store';
 import ApiClient from '../api/APIClient';
 
 interface UserState {

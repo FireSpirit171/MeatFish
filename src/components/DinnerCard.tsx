@@ -27,17 +27,24 @@ const DinnerCard: React.FC<DinnerCardProps> = ({ id, tableNumber, status, formed
   return (
     <div className={`dinner-card ${status}`} onClick={onClick}>
       <div className="dinner-info">
-        <h2>Заказ №{id}</h2>
-        <p>Номер стола: {tableNumber}</p>
-        <p className="status">Статус: {getStatusText(status)}</p>
-        <p>Дата оформления: {formedAt ? new Date(formedAt).toLocaleString() : '—'}</p>
-        {(status === 'c' || status === 'r') && <p>Общая стоимость: {totalCost} ₽</p>}
+        <p className="order-id">{id}</p>
+        <p className="table-number">{tableNumber}</p>
+        <p className="status">{getStatusText(status)}</p>
+        <p className="date-formed">{formedAt ? new Date(formedAt).toLocaleDateString() : '—'}</p>
       </div>
-      {qr && (
-        <div className="qr-container">
-          <img className="qr-code" src={`data:image/png;base64,${qr}`} alt="QR Code" />
-        </div>
-      )}
+      <div className="dinner-icon">
+        {status === 'f' ? (
+          <img className="status-icon" src="/time.svg" alt="Time Icon" />
+        ) : (
+          <div className="qr-hover-wrapper">
+            <img className="status-icon" src="/href.svg" alt="QR Icon" />
+            <div className="qr-hover">
+              {qr && <img className="qr-code" src={`data:image/png;base64,${qr}`} alt="QR Code" />}
+              <p>Общая стоимость: {totalCost} ₽</p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
