@@ -3,13 +3,15 @@ import filterReducer from './filterSlice';
 import userReducer from './userSlice';
 import cartReducer from './cartSlice';
 import dinnerReducer from './dinnerSlice';
+import dishesReducer from './dishesSlice';
 
 const store = configureStore({
   reducer: {
     filter: filterReducer,
     user: userReducer,
     cart: cartReducer,
-    dinners: dinnerReducer, // Добавляем новый слайс для заказов
+    dinners: dinnerReducer,
+    dishes: dishesReducer,
   },
 });
 

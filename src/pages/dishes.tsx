@@ -1,19 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
-import APIClient from "../api/APIClient";
-import { Dish } from "../api/Types";
-import DishCard from "../components/DishCard";
-import { mockDishes } from "../mockdata";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
 import { setPriceRange } from "../store/filterSlice";
-import { setDraftDinner } from "../store/cartSlice";
+import { fetchDishes } from "../store/dishesSlice";
+import DishCard from "../components/DishCard";
 import { useRouter } from "next/router";
-
-interface DishesResponse {
-  dishes: Dish[];
-  draft_dinner_id: number;
-  total_dish_count: number;
-}
 
 const debounce = <T extends (...args: any[]) => void>(func: T, delay: number): ((...args: Parameters<T>) => void) => {
   let timer: NodeJS.Timeout;
@@ -28,54 +19,14 @@ const MainPage: React.FC = () => {
   const router = useRouter();
   const { minRange, maxRange } = useSelector((state: RootState) => state.filter);
   const { totalDishCount, draftDinnerId } = useSelector((state: RootState) => state.cart);
-
-  const [dishes, setDishes] = useState<Dish[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const getDishes = async (minPrice?: number, maxPrice?: number): Promise<void> => {
-    try {
-      let url = "";
-      if (minPrice !== undefined && maxPrice !== undefined) {
-        url += `?min_price=${minPrice}&max_price=${maxPrice}`;
-      }
-
-      const timeout = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Таймаут запроса")), 2000)
-      );
-
-      const response = await Promise.race([APIClient.getDishes(url), timeout]);
-      const data = await response.json() as DishesResponse;
-
-      setDishes(data.dishes);
-      dispatch(setDraftDinner({
-        draftDinnerId: data.draft_dinner_id,
-        totalDishCount: data.total_dish_count,
-      }));
-      setLoading(false);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        const filteredMockDishes = mockDishes.dishes.filter((dish) => {
-          const withinMinPrice = minPrice !== undefined ? dish.price >= minPrice : true;
-          const withinMaxPrice = maxPrice !== undefined ? dish.price <= maxPrice : true;
-          return withinMinPrice && withinMaxPrice;
-        });
-
-        setDishes(filteredMockDishes);
-        setError(err.message);
-      } else {
-        setError("Ошибка загрузки данных");
-        console.log(error);
-      }
-      setLoading(false);
-    }
-  };
+  const { dishes, loading, error } = useSelector((state: RootState) => state.dishes);
 
   const debouncedGetDishes = useCallback(
     debounce((minPrice: number, maxPrice: number) => {
-      getDishes(minPrice, maxPrice);
+      const url = minPrice && maxPrice ? `?min_price=${minPrice}&max_price=${maxPrice}` : '';
+      dispatch(fetchDishes(url));
     }, 500),
-    []
+    [dispatch]
   );
 
   useEffect(() => {
@@ -97,10 +48,10 @@ const MainPage: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (error) {
     return (
-      <div className="loading">
-        <img src="/loading.webp" alt="Загрузка..." />
+      <div className="error">
+        <p>Ошибка загрузки данных: {error}</p>
       </div>
     );
   }
